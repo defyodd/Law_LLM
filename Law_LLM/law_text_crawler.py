@@ -15,6 +15,7 @@ service = Service(executable_path="msedgedriver.exe")
 driver = webdriver.Edge(service=service, options=options)
 wait = WebDriverWait(driver, 20)
 
+
 # 要爬取的页面（爬取的是中华名族共和国民法典）
 url = "https://www.pkulaw.com/chl/aa00daaeb5a4fe4ebdfb.html?way=listView"
 
