@@ -30,7 +30,7 @@ except Exception as e:
     result["正文"] = "抓取失败"
 
 # 保存为 JSON
-with open("law_single.json", "w", encoding="utf-8") as f:
+with open("law_Civil_Code.json", "w", encoding="utf-8") as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
 
-print("✅ 成功写入 law_single.json")
+print("✅ 成功写入 law_Civil_Code.json")
