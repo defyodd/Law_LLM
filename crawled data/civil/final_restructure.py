@@ -5,8 +5,8 @@ def create_final_restructured_civil_code():
     创建最终的重构版本，只包含有实际条文内容的部分
     """
     
-    input_file = r"e:\WorkBench\VSCode\Law_LLM\Law_LLM\crawled data\civil_code_clean.json"
-    output_file = r"e:\WorkBench\VSCode\Law_LLM\Law_LLM\crawled data\civil_code_final_restructured.json"
+    input_file = r"D:\Law_LLM\crawled data\civil\civil_code_clean.json"
+    output_file = r"D:\Law_LLM\crawled data\civil\civil_code_final_restructured.json"
     
     with open(input_file, 'r', encoding='utf-8') as f:
         original_data = json.load(f)
