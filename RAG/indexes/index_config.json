@@ -1,0 +1,6 @@
+{
+  "model_name": "unknown",
+  "dimension": 384,
+  "total_vectors": 476,
+  "index_type": "IndexFlatIP"
+}
