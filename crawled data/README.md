@@ -64,6 +64,30 @@
 }             
 ```
 
+## 项目爬取示例
+1. "civil_code": "urls/civil_code.txt",    #民法典
+2. "penal_code": "urls/penal_code.txt",    #刑法    
+3. "punish_law": "urls/punish_law.txt",    #治安管理处罚法
+4. "constitution": "urls/constitution.txt",    #宪法
+5. "supervision_law":"urls/supervision_law.txt" ,   #监察法
+6. "company_law" : "urls/company_law.txt",    #公司法
+7. "relics_protection_law": "urls/relics_protection_law.txt",   #文物保护法
+8. "legislation_law": "urls/legislation_law.txt",  #立法法
+9. "tax_law": "urls/tax_law.txt",   #税法
+10. "account_law": "urls/account_law.txt" ,  # 会计法
+11. "labor_law": "urls/labor_law.txt" ,  # 劳动法
+12. "antitrust_law": "urls/antitrust_law.txt" ,  #反垄断法
+13. "national_defense_edu_law": "urls/national_defense_law.txt" ,  #国防教育法
+14. "national_defense_law": "urls/national_defense_law.txt" ,  #国防法
+15. "compulsory_edu_law": "urls/compulsory_edu_law.txt",  #义务教育
+16. "minors_protection_law": "urls/minors_protection_law.txt" ,  #未成年人保护法
+17. "charity_law": "urls/charity_law.txt",  #慈善法
+18. "women_rights_law": "urls/women_rights_law.txt",  #妇女权益保障法法
+19. "anti_espionage_Law": "urls/anti_espionage_law.txt",    #反间谍法
+20. "civil_procedure_law": "urls/civil_procedure_law.txt",  #民事诉讼法
+21. "criminal_procedure_law": "urls/criminal_procedure_law.txt",  #刑事诉讼法
+22. "beijing_wildanimal_protection_law": "urls/beijing_wildanimal_protection_law.txt"    #北京野生动物保护条例
+
 ## 注意事项
 1. 确保网络连接正常，部分页面可能需要较长时间加载。
 2. 如果遇到反爬机制，可以尝试调整fetch_html_with_selenium函数中的等待时间。
