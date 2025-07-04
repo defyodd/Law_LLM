@@ -76,7 +76,6 @@ python FAISS/query_index.py
   ]
 }
 ```
-
 ## 注意事项
 - 请确保 JSON 文件结构与示例一致，包含 `title`、`parts`、`chapters`、`articles` 等字段
 - 如需更换嵌入模型，可在 `LawFAISSIndexBuilder` 初始化时指定 `model_name`
