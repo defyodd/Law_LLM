@@ -6,7 +6,7 @@ from law_parser import parse_law_articles
 # 分类对应文件
 categories = {
     # "civil_code": "urls/civil_code.txt",    #民法典
-    # "penal_code": "urls/penal_code.txt",    #刑法    
+     "penal_code": "urls/penal_code.txt",    #刑法    
     # "punish_law": "urls/punish_law.txt",    #治安管理处罚法
     # "constitution": "urls/constitution.txt",    #宪法
     # "supervision_law":"urls/supervision_law.txt" ,   #监察法
@@ -27,7 +27,7 @@ categories = {
     # "civil_procedure_law": "urls/civil_procedure_law.txt",  #民事诉讼法
     # "criminal_procedure_law": "urls/criminal_procedure_law.txt",  #刑事诉讼法
     # "beijing_wildanimal_protection_law": "urls/beijing_wildanimal_protection_law.txt" ,   #北京野生动物保护条例
-    "land_administration_law": "urls/land_administration_law.txt",  #土地管理法
+    # "land_administration_law": "urls/land_administration_law.txt",  #土地管理法
     # 可继续添加更多
 }
 
