@@ -53,12 +53,12 @@ def main():
                 continue  # 过滤掉相似度小于 0.6 的
             found = True
             meta = metadata[idx]
-            text_preview = texts[idx][:200].replace("\n", " ")
             title = f"{meta.get('file_title', '')} | {meta.get('part_title', '')} {meta.get('subpart_title', '')} {meta.get('chapter_title', '')} {meta.get('article_no', '')}"
+            article = f"{meta.get('article_content','')}"
             print(f"\nTop {rank+1}")
             print(f"标题: {title}")
             print(f"相似度: {distance:.4f}")
-            print(f"内容预览: {text_preview}")
+            print(f"内容预览: {article}")
         if not found:
             print("没有结果超过0.6的相似度。")
         print("=================")

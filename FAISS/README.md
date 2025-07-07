@@ -29,12 +29,12 @@ pip install numpy faiss-cpu sentence-transformers
   - `law_texts.pkl`：原始文本内容列表
   - `law_metadata.pkl`：每条文本的元数据信息
   - `index_config.json`：索引配置信息
-- `crawled data/data/`：存放结构化法律条文 JSON 文件
+  - `crawled data/cleaned_data/`：存放结构化法律条文 JSON 文件
 
 ## 使用方法
 
 ### 1. 构建索引
-将待索引的法律条文 JSON 文件放入 `crawled data/data/` 目录，运行：
+将待索引的法律条文 JSON 文件放入 `crawled data/cleaned_data/` 目录，运行：
 ```bash
 python FAISS/build_index.py
 ```
