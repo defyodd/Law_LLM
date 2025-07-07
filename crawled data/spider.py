@@ -24,9 +24,10 @@ categories = {
     # "charity_law": "urls/charity_law.txt",  #慈善法
     # "women_rights_law": "urls/women_rights_law.txt",  #妇女权益保障法法
     # "anti_espionage_Law": "urls/anti_espionage_law.txt",    #反间谍法
-    "civil_procedure_law": "urls/civil_procedure_law.txt",  #民事诉讼法
-    "criminal_procedure_law": "urls/criminal_procedure_law.txt",  #刑事诉讼法
-    "beijing_wildanimal_protection_law": "urls/beijing_wildanimal_protection_law.txt"    #北京野生动物保护条例
+    # "civil_procedure_law": "urls/civil_procedure_law.txt",  #民事诉讼法
+    # "criminal_procedure_law": "urls/criminal_procedure_law.txt",  #刑事诉讼法
+    # "beijing_wildanimal_protection_law": "urls/beijing_wildanimal_protection_law.txt" ,   #北京野生动物保护条例
+    "land_administration_law": "urls/land_administration_law.txt",  #土地管理法
     # 可继续添加更多
 }
 
@@ -36,9 +37,9 @@ def read_urls(filepath):
 
 def save_json(data, category):
     law_title = category.replace("_", " ").title()
-    save_dir = os.path.join("data", category)
-    os.makedirs(save_dir, exist_ok=True)
-    filename = os.path.join(save_dir, f"{law_title}.json")
+    # save_dir = os.path.join("data", category)
+    # os.makedirs(save_dir, exist_ok=True)
+    filename = os.path.join("data", f"{law_title}.json")
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(f" 已保存：{filename}")
