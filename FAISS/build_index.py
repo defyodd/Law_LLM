@@ -130,7 +130,7 @@ class LawFAISSIndexBuilder:
 
 
 def main():
-    json_dir = r"D:\Python\LLM\Law_LLM\crawled data\data"
+    json_dir = r"D:\Python\LLM\Law_LLM\crawled data\cleaned_data"
     save_dir = r"D:\Python\LLM\Law_LLM\FAISS\indexes"
     builder = LawFAISSIndexBuilder()
     builder.build_index_from_json_dir(json_dir, save_dir)
