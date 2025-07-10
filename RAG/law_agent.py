@@ -11,7 +11,9 @@ from typing import List, Dict, Any
 from openai import OpenAI
 
 from search_faiss_index import LawFAISSSearcher
-from build_faiss_index import LawFAISSIndexBuilder
+from build_index import LawFAISSIndexBuilder
+from langchain.memory import ConversationBufferMemory
+import logging
 import sys, io
 
 # 用 UTF-8 包装标准输入输出
@@ -27,6 +29,7 @@ class LawAgent:
         self.index_dir = index_dir
         self.searcher = None
         self.conversation_history = []
+        self.memory = ConversationBufferMemory(return_messages=True)
         self._initialize_index()
         self._initialize_llm()
 
@@ -50,16 +53,17 @@ class LawAgent:
     def _build_index(self):
         """从JSON文件构建FAISS索引"""
         print("🔨 正在构建法律知识库...")
-        json_file = r"e:/WorkBench/VSCode/Law_LLM/Law_LLM/crawled data/中华人民共和国民法典-北大法宝V6官网(1).json"
+        # json_file = r"e:/WorkBench/VSCode/Law_LLM/Law_LLM/crawled data/中华人民共和国民法典-北大法宝V6官网(1).json"
+        json_dir = r"E:\Law_LLM-main\crawled data\cleaned_data"
         builder = LawFAISSIndexBuilder()
-        builder.build_index_from_json(json_file, self.index_dir)
+        builder.build_index_from_json_dir(json_dir, self.index_dir)
         self.searcher = LawFAISSSearcher(self.index_dir)
         print("✅ 知识库构建完成")
 
     def _initialize_llm(self):
         api_key = 'sk-de88dee6506d49c59ccaecb8abd91045'
         if not api_key:
-            raise ValueError("sk-de88dee6506d49c59ccaecb8abd91045")
+            raise ValueError("1")
         self.llm = OpenAI(
             api_key=api_key,
             base_url="https://api.deepseek.com"
@@ -86,13 +90,30 @@ class LawAgent:
         if any(w in query for w in ['流程', '程序', '步骤', '手续']):
             return "程序咨询"
         return "一般咨询"
+    def _self_evaluate(self, answer, question):
+        eval_prompt = f"问题：{question}\n答案：{answer}\n回答是否充分明确？不充分则返回'重试'，否则'通过'。"
+        resp = self.llm.chat.completions.create(model="deepseek-chat", messages=[{"role": "system", "content": "你是评估员。"}, {"role": "user", "content": eval_prompt}])
+        return resp.choices[0].message.content.strip()
+
+    def _check_clarity(self, question):
+        prompt = f"问题：'{question}' 是否足够清晰回答？若模糊请指出需补充的信息，否则返回'清晰'。"
+        resp = self.llm.chat.completions.create(model="deepseek-chat", messages=[{"role": "user", "content": prompt}])
+
+        return resp.choices[0].message.content.strip()
 
     def answer(self, question: str, max_results: int = 5) -> Dict[str, Any]:
-        """主流程：检索+生成+返回"""
+        # clarity = self._check_clarity(question)
+        # if clarity != '清晰':
+        #     logging.info(f"模糊问题：{clarity}")
+        #     return {'status': 'clarify', 'message': clarity}
+
         query_type = self._analyze_query_type(question)
         keywords = self._extract_keywords(question)
         results = self.searcher.search(question, top_k=max_results)
         answer_text = self._generate_answer(question, results, query_type)
+        eval_result = self._self_evaluate(answer_text, question)
+        if eval_result == '重试':
+            answer_text += "\n\n（注意：答案可能不完全明确，建议咨询专业律师。）"
         response = {
             'question': question,
             'query_type': query_type,
@@ -102,15 +123,17 @@ class LawAgent:
             'confidence': self._calculate_confidence(results),
             'suggestions': self._generate_suggestions(results, query_type)
         }
+        self.memory.save_context({"input": question}, {"output": answer_text})
         self.conversation_history.append({
             'question': question,
             'response': response,
             'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         })
+        logging.info(f"问题回答成功：{question}")
         return response
 
     def _generate_answer(self, question: str, results: List[Dict], query_type: str) -> str:
-        """借助DeepSeek LLM生成回答"""
+
         if not results:
             return (
                 "抱歉，我在现有的法律条文中没有找到直接相关的内容。建议您：\n"
@@ -221,6 +244,11 @@ def interactive_agent():
                 print("请输入有效问题")
                 continue
             rsp = agent.answer(question)
+            # 添加这里的判断
+            if rsp.get('status') == 'clarify':
+                print(f"❗ 请补充信息：{rsp['message']}")
+            else:
+                agent.print_answer(rsp)
             agent.print_answer(rsp)
         except KeyboardInterrupt:
             print("\n👋 助手已关闭")
@@ -228,5 +256,5 @@ def interactive_agent():
         except Exception as e:
             print(f"❌ 系统错误：{e}")
 
-if __name__ == "__main__":
-    interactive_agent()
+# if __name__ == "__main__":
+#     interactive_agent()
