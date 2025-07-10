@@ -30,7 +30,6 @@ pip install numpy faiss-cpu sentence-transformers
   - `crawled data/cleaned_data/`：存放结构化法律条文 JSON 文件
 
 ## 数据库设计
-数据库文件：`law_articles.db`
 核心表：`articles`
 
 | 字段名             | 类型         | 说明                 |
@@ -65,24 +64,13 @@ python FAISS/query_index.py
 返回与输入语义最相近的条文及其元数据。
 
 ### 4. 结构化查询
-1. 创建数据库并导入JSON：`cd Law_LLM && python FAISS/from_json_to_sqlite.py`
-2. 查询测试：`python FAISS/query_sqlite.py --no 第三条`
+1. 创建数据库并导入JSON：`cd Law_LLM && python FAISS/from_json_to_mysql.py`
 
 ## 代码处理流程
 1. 遍历所有 `cleaned_data/*.json` 文件
 2. 解析层级结构（编 → 分编 → 章 → 条）
 3. 按每条法条写入数据库
 4. 自动为每条记录分配 `vector_idx`（用于 FAISS 对应）
-
-## 简单的测试案例
-```bash
-python query_sqlite.py --no 第五条
-python query_sqlite.py --law 民法典
-python query_sqlite.py --law 民法典 --part 第一编
-python query_sqlite.py --chapter 第二章
-python query_sqlite.py --keyword 担保
-python query_sqlite.py --vector 123
-```
 
 ## 注意事项
 1. 请确保 JSON 文件结构与示例一致，包含 `title`、`parts`、`chapters`、`articles` 等字段
