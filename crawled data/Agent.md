@@ -198,3 +198,8 @@ agent.print_answer(rsp)
 - "有没有房屋买卖合同的判例？"
 
 
+# 启动后端Agent架构
+```
+python main.py
+```
+
