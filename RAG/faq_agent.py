@@ -109,7 +109,8 @@ class FAQAgent:
                     "suggestions": ["本答复基于法律常识，如涉及个案请咨询律师"],
                     "relevant_articles": [],
                     "query_type": "常见问题",
-                    "keywords": [k]
+                    "keywords": [k],
+                    "type": "chat"  # 添加类型标识
                 }
         return {
             "agent": "FAQAgent",
@@ -118,5 +119,6 @@ class FAQAgent:
             "suggestions": [],
             "relevant_articles": [],
             "query_type": "未知",
-            "keywords": []
+            "keywords": [],
+            "type": "chat"  # 添加类型标识
         }

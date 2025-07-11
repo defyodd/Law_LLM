@@ -30,7 +30,8 @@ class ContractAgent:
                     "relevant_articles": ["《民法典》第三编 合同", "《民法典》第四百六十四条"],
                     "query_type": "合同生成",
                     "keywords": ["生成合同", contract_type],
-                    "contract_content": contract_content
+                    "contract_content": contract_content,
+                    "type": "write"  # 添加类型标识
                 }
             else:
                 return {
@@ -40,7 +41,8 @@ class ContractAgent:
                     "suggestions": ["请选择具体的合同类型"],
                     "relevant_articles": [],
                     "query_type": "合同类型选择",
-                    "keywords": ["合同生成"]
+                    "keywords": ["合同生成"],
+                    "type": "write"  # 添加类型标识
                 }
 
         return {
@@ -50,7 +52,8 @@ class ContractAgent:
             "suggestions": ["请明确合同生成需求"],
             "relevant_articles": [],
             "query_type": "其他",
-            "keywords": []
+            "keywords": [],
+            "type": "chat"  # 非合同生成请求返回 chat 类型
         }
 
     def _generate_lease_contract(self) -> str:

@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# """
-# 智能法律助手Agent - 基于RAG的问答系统，接入DeepSeek大模型
-# """
 import os
 import re
 import datetime
@@ -24,7 +19,7 @@ class LawAgent:
     """智能法律助手Agent"""
     def __init__(self, index_dir: str = "./indexes"):
         """
-        初始化法律Agent，并配置DeepSeek LLM客户端
+        初始化法律Agent
         """
         self.index_dir = index_dir
         self.searcher = None
@@ -101,19 +96,15 @@ class LawAgent:
 
         return resp.choices[0].message.content.strip()
 
-    def answer(self, question: str, max_results: int = 5) -> Dict[str, Any]:
-        # clarity = self._check_clarity(question)
-        # if clarity != '清晰':
-        #     logging.info(f"模糊问题：{clarity}")
-        #     return {'status': 'clarify', 'message': clarity}
-
+    def answer(self, question: str, max_results: int = 5, model: str = "deepseek-chat") -> Dict[str, Any]:
         query_type = self._analyze_query_type(question)
         keywords = self._extract_keywords(question)
         results = self.searcher.search(question, top_k=max_results)
-        answer_text = self._generate_answer(question, results, query_type)
+        answer_text = self._generate_answer(question, results, query_type, model)
         eval_result = self._self_evaluate(answer_text, question)
         if eval_result == '重试':
             answer_text += "\n\n（注意：答案可能不完全明确，建议咨询专业律师。）"
+
         response = {
             'question': question,
             'query_type': query_type,
@@ -121,39 +112,53 @@ class LawAgent:
             'answer': answer_text,
             'relevant_articles': results,
             'confidence': self._calculate_confidence(results),
-            'suggestions': self._generate_suggestions(results, query_type)
+            'suggestions': self._generate_suggestions(results, query_type),
+            'agent': 'LawAgent',
+            'type': 'chat'  # 添加类型标识
         }
+
         self.memory.save_context({"input": question}, {"output": answer_text})
         self.conversation_history.append({
             'question': question,
             'response': response,
             'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         })
-        logging.info(f"问题回答成功：{question}")
+
         return response
 
-    def _generate_answer(self, question: str, results: List[Dict], query_type: str) -> str:
+    def _generate_answer(self, question: str, results: List[Dict], query_type: str,
+                         model: str = "deepseek-chat") -> str:
+        # 构建检索到的法条内容
+        context = ""
+        if results:
+            context = "\n".join([
+                f"【{art['article_no']}】{art['content']}"
+                for art in results[:3]
+            ])
 
-        if not results:
-            return (
-                "抱歉，我在现有的法律条文中没有找到直接相关的内容。建议您：\n"
-                "1. 尝试使用更具体的关键词\n"
-                "2. 咨询专业律师获得更准确的建议"
-            )
-        # 准备prompt
-        system_msg = (
-            "你是一名专业的法律咨询助手，基于下面的法条和用户问题，给出严谨的解答，"
-            "引用相关条文编号，若无覆盖请提示并建议咨询律师。"
-        )
-        context = "\n\n".join([f"{r['article_no']}: {r['article_content']}" for r in results])
-        user_msg = (
-            f"【问题类型】：{query_type}\n"
-            f"【用户问题】：{question}\n\n"
-            f"【相关法条】：\n{context}\n\n"
-            "请给出清晰、有逻辑的回答，注明法条编号。"
-        )
+        # 系统提示词
+        system_msg = """你是一位专业的法律助手，具备深厚的法律知识。请基于提供的法条内容回答用户的法律问题。
+
+    回答要求：
+    1. 准确引用相关法条
+    2. 语言通俗易懂，避免过于专业的术语
+    3. 结合具体情况给出实用建议
+    4. 如果法条不足以完全回答问题，请诚实说明
+    5. 提醒用户在具体案件中咨询专业律师"""
+
+        # 用户消息
+        user_msg = f"""用户问题：{question}
+
+    查询类型：{query_type}
+
+    相关法条：
+    {context if context else "未找到直接相关的法条"}
+
+    请基于上述法条内容，为用户提供准确、实用的法律解答。"""
+
+        # 调用LLM生成回答
         resp = self.llm.chat.completions.create(
-            model="deepseek-chat",
+            model=model,
             messages=[
                 {"role": "system", "content": system_msg},
                 {"role": "user", "content": user_msg},
@@ -244,7 +249,6 @@ def interactive_agent():
                 print("请输入有效问题")
                 continue
             rsp = agent.answer(question)
-            # 添加这里的判断
             if rsp.get('status') == 'clarify':
                 print(f"❗ 请补充信息：{rsp['message']}")
             else:
