@@ -122,7 +122,49 @@
 55. "Mineral Resources Law": "urls/mineral_resources_law.txt", #矿产资源法
 56. "Coal Law": "urls/coal_law.txt", #煤炭法
 57. "Electric Power Law": "urls/electric_power_law.txt", #电力法
-
+58. "Railway Law": "urls/railway_law.txt", #铁路法
+59. "Highway Law": "urls/highway_law.txt", #公路法
+60. "Port Law": "urls/port_law.txt", #港口法
+61. "Civil Aviation Law": "urls/civil_aviation_law.txt", #民用航空法
+62. "Energy Conservation Law": "urls/energy_conservation_law.txt", #节约能源法
+63. "Renewable Energy Law": "urls/renewable_energy_law.txt", #可再生能源法
+64. "Circular Economy Promotion Law": "urls/circular_economy_promotion_law.txt", #循环经济促进法
+65. "Rural Revitalization Promotion Law": "urls/rural_revitalization_promotion_law.txt", #乡村振兴促进法
+66. "Agriculture Law": "urls/agriculture_law.txt", #农业法
+67. "Land Surveying and Mapping Law": "urls/land_surveying_and_mapping_law.txt", #测绘法
+68. "Emergency Response Law": "urls/emergency_response_law.txt", #突发事件应对法
+69. "Fire Protection Law": "urls/fire_protection_law.txt", #消防法
+70. "Earthquake Prevention Law": "urls/earthquake_prevention_law.txt", #防震减灾法
+71. "Meteorology Law": "urls/meteorology_law.txt", #气象法
+72. "Tourism Law": "urls/tourism_law.txt", #旅游法
+73. "Advertising Law": "urls/advertising_law.txt", #广告法
+74. "computing_security_law": "urls/computing_security_law.txt",  # 网络安全法
+75. "ecommerce_law": "urls/ecommerce_law.txt",  # 电子商务法
+76. "teacher_law": "urls/teacher_law.txt",  # 教师法
+77. "employment_service_law": "urls/employment_service_law.txt",  # 就业促进法
+78. "customs_law": "urls/customs_law.txt",  # 海关法
+79. "inspection_import_export_law": "urls/inspection_import_export_law.txt",  # 进出口商品检验法
+80. "anti_dumping_law": "urls/anti_dumping_law.txt",  # 反倾销法
+81. "anti_subsidy_law": "urls/anti_subsidy_law.txt",  # 反补贴法
+82. "patent_law": "urls/patent_law.txt",    # 专利法
+83. "trademark_law": "urls/trademark_law.txt",    # 商标法
+84. "copyright_law": "urls/copyright_law.txt",      # 著作权法
+85. "tobacco_monopoly_law": "urls/tobacco_monopoly_law.txt",  # 烟草专卖法
+86. "quality_law": "urls/quality_law.txt",  # 产品质量法
+87. "vehicle_purchase_tax_law": "urls/vehicle_purchase_tax_law.txt",  # 车辆购置税法
+88. "grain_security_law": "urls/grain_security_law.txt",  # 粮食安全保障法
+89. "data_security_law": "urls/data_security_law.txt", # 数据安全法
+90. "personal_info_protection_law": "urls/personal_info_protection_law.txt",  # 个人信息保护法
+91. "consumers_rights_protection_law": "urls/consumers_rights_protection_law.txt", # 消费者权益保护法
+92. "black_soil_protection_law": "urls/black_soil_protection_law.txt" ,  # 黑土地保护法
+93. "yellow_river_protection_law": "urls/yellow_river_protection_law.txt",  # 黄河保护法
+94. "yangtze_protection_law": "urls/yangtze_protection_law.txt",  # 长江保护法
+95. "metrology_law": "urls/metrology_law.txt", # 计量法
+96. "hainan_ftp_law": "urls/hainan_ftp_law.txt",    # 海南自由贸易港法
+97. "cyberspace_administration_law": "urls/cyberspace_administration_law.txt", # 互联网信息服务管理办法
+98. "notarization_law": "urls/notarization_law.txt",  # 公证法
+99. "trust_law": "urls/trust_law.txt",  # 信托法
+s
 ## 注意事项
 1. 确保网络连接正常，部分页面可能需要较长时间加载。
 2. 如果遇到反爬机制，可以尝试调整fetch_html_with_selenium函数中的等待时间。
