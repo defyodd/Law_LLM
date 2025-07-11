@@ -20,8 +20,6 @@ pip install numpy faiss-cpu sentence-transformers
 ## 目录结构说明及其功能
 - `FAISS/build_index.py`：索引构建与保存脚本
 - `FAISS/query_index.py`：命令行检索脚本
-- `FAISS/from_json_to_sqlite.py`：将结构化法律JSON数据写入SQLite数据库
-- `FAISS/query_sqlite.py`：从SQLite中按各种维度查询法条
 - `FAISS/indexes/`：保存生成的 FAISS 索引及配套文件
   - `law_faiss_index.bin`：FAISS 索引文件
   - `law_texts.pkl`：原始文本内容列表
@@ -29,20 +27,7 @@ pip install numpy faiss-cpu sentence-transformers
   - `index_config.json`：索引配置信息
   - `crawled data/cleaned_data/`：存放结构化法律条文 JSON 文件
 
-## 数据库设计
-核心表：`articles`
 
-| 字段名             | 类型         | 说明                 |
-| ------------------ | ---------- | -------------------- |
-| `id`               | INTEGER PK | 主键，自增           |
-| `law_title`        | TEXT       | 法律名称（如《民法典》） |
-| `part_title`       | TEXT       | 编标题（如“第一编 总则”） |
-| `subpart_title`    | TEXT       | 分编标题（可为空）     |
-| `chapter_title`    | TEXT       | 章标题（如“第一章 基本规定”） |
-| `article_no`       | TEXT       | 条号（如“第四条”）     |
-| `content`          | TEXT       | 条文正文内容           |
-| `source_file`      | TEXT       | 来源 JSON 文件名      |
-| `vector_idx`       | INTEGER    | 向量编号，对应 FAISS 向量索引 |
 
 ## 使用步骤
 
@@ -59,7 +44,8 @@ pip install numpy faiss-cpu sentence-transformers
 ### 3. 检索条文
 运行检索脚本，按提示输入查询内容：
 ```bash
-python FAISS/query_index.py
+cd FAISS
+python query_index.py
 ```
 返回与输入语义最相近的条文及其元数据。
 
