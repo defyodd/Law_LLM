@@ -39,7 +39,7 @@ categories = {
     # "price_law": "urls/price_law.txt",   #价格法
     # "Civil Servants Law": "urls/civil_servants_law.txt",    #公务员法 
     # "Budget_Law": "urls/budget_law.txt" , #预算法
-    "metrology_law": "urls/metrology_law.txt",  #计量法
+    # "metrology_law": "urls/metrology_law.txt",  #计量法
     # "Administrative Punishment Law": "urls/administrative_punishment_law.txt"  ,  #行政处罚法
     # "Urban and Rural Planning Law": "urls/urban_and_rural_planning_law.txt"  , #城乡规划法
     # "Production Safety Law": "urls/production_safety_law.txt",  #生产安全法
@@ -84,8 +84,8 @@ categories = {
     # "teacher_law": "urls/teacher_law.txt",  # 教师法
     # "employment_service_law": "urls/employment_service_law.txt",  # 就业促进法
     # "customs_law": "urls/customs_law.txt",  # 海关法
-    # "inspection_import_export_law": "urls/inspection_import_export_law.txt",  # 进出口商品检验法
     # "anti_dumping_law": "urls/anti_dumping_law.txt",  # 反倾销法
+    # "inspection_import_export_law": "urls/inspection_import_export_law.txt",  # 进出口商品检验法
     # "anti_subsidy_law": "urls/anti_subsidy_law.txt",  # 反补贴法
     # "patent_law": "urls/patent_law.txt",    # 专利法
     # "trademark_law": "urls/trademark_law.txt",    # 商标法
@@ -100,9 +100,9 @@ categories = {
     # "black_soil_protection_law": "urls/black_soil_protection_law.txt" ,  # 黑土地保护法
     # "yellow_river_protection_law": "urls/yellow_river_protection_law.txt",  # 黄河保护法
     # "yangtze_protection_law": "urls/yangtze_protection_law.txt",  # 长江保护法
-    "hainan_ftp_law": "urls/hainan_ftp_law.txt",    # 海南自由贸易港法
-    "cyberspace_administration_law": "urls/cyberspace_administration_law.txt", # 互联网信息服务管理办法
-    "notarization_law": "urls/notarization_law.txt",  # 公证法
+    # "hainan_ftp_law": "urls/hainan_ftp_law.txt",    # 海南自由贸易港法
+    # "cyberspace_administration_law": "urls/cyberspace_administration_law.txt", # 互联网信息服务管理办法
+    # "notarization_law": "urls/notarization_law.txt",  # 公证法
     "trust_law": "urls/trust_law.txt",  # 信托法
     # 可继续添加更多
 }
