@@ -7,7 +7,7 @@
 import search_faiss_index
 from search_faiss_index import LawFAISSSearcher
 import os
-from build_faiss_index import LawFAISSIndexBuilder
+from build_index import LawFAISSIndexBuilder
 import json
 from typing import List, Dict, Any
 
