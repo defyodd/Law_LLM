@@ -9,8 +9,8 @@ dispatcher = AgentDispatcher()
 class QuestionRequest(BaseModel):
     prompt: str
     historyId: int
-    model: str = "deepseek-chat"
-
+    # model: str = "deepseek-chat" deepseek-reasoner
+    model: str
 @app.post("/ai/chat")
 def chat(q: QuestionRequest):
     result = dispatcher.route_question(q.prompt, q.historyId, q.model)
