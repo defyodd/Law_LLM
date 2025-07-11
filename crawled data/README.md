@@ -87,6 +87,41 @@
 20. "civil_procedure_law": "urls/civil_procedure_law.txt",  #民事诉讼法
 21. "criminal_procedure_law": "urls/criminal_procedure_law.txt",  #刑事诉讼法
 22. "beijing_wildanimal_protection_law": "urls/beijing_wildanimal_protection_law.txt"    #北京野生动物保护条例
+23. "land_administration_law": "urls/land_administration_law.txt",  #土地管理法
+24. "environmental_protection_law": "urls/environmental_protection_law.txt",  #环境保护法
+25. "Anti-Unfair_Competition_Law": "urls/anti_unfair_competition_law.txt",  #反不正当竞争法
+26. "infectious_disease_prevention_law":"urls/infectious_disease_prevention_law.txt",   #传染病防治法
+27. "foreign_relations_law": "urls/foreign_relations_law.txt",   #对外关系法
+28. "patriotic_education_law": "urls/patriotic_education_law.txt"  , #爱国主义教育法 
+29. "banking_law": "urls/banking_law.txt",   #银行业监督管理法
+30. "Administrative Licensing Law": "urls/administrative_licensing_law.txt",   #行政许可法
+31. "Government Procurement Law": "urls/government_procurement_law.txt",   #政府采购法
+32. "price_law": "urls/price_law.txt",   #价格法
+33. "Civil Servants Law": "urls/civil_servants_law.txt",    #公务员法 
+34. "Budget_Law": "urls/budget_law.txt" , #预算法
+35. "Administrative Punishment Law": "urls/administrative_punishment_law.txt"  ,  #行政处罚法
+36. "Urban and Rural Planning Law": "urls/urban_and_rural_planning_law.txt"  , #城乡规划法
+37. "Production Safety Law": "urls/production_safety_law.txt",  #生产安全法
+38. "Securities Investment Fund Law": "urls/securities_investment_fund_law.txt",  #证券投资基金法
+39. "insurance_law": "urls/insurance_law.txt",  #保险法
+40. "Labor Contract Law": "urls/labor_contract_law.txt",  #劳动合同法
+41. "Construction Law": "urls/construction_law.txt",  #建筑法
+42. "water_law": "urls/water_law.txt",  #水法
+43. "Soil and Water Conservation Law": "urls/soil_and_water_conservation_law.txt",  #水土保持法
+44. "water_pollution_prevention_law": "urls/water_pollution_prevention_law.txt",  #水污染防治法
+45. "air_pollution_prevention_law": "urls/air_pollution_prevention_law.txt",  #大气污染防治法
+46. "Administrative Compulsion Law": "urls/administrative_compulsion_law.txt",  #行政强制法
+47. "Securities Law": "urls/securities_law.txt",  #证券法
+48. "Pharmaceutical Administration Law": "urls/pharmaceutical_administration_law.txt",  #药品管理法
+49. "Food Safety Law": "urls/food_safety_law.txt",  #食品安全法
+50. "Rural Land Contracting Law": "urls/rural_land_contracting_law.txt", #农村土地承包法
+51. "Flood Control Law": "urls/flood_control_law.txt", #防洪法
+52. "Forest Law": "urls/forest_law.txt", #森林法
+53. "Grassland Law": "urls/grassland_law.txt", #草原法
+54. "Fisheries Law": "urls/fisheries_law.txt", #渔业法
+55. "Mineral Resources Law": "urls/mineral_resources_law.txt", #矿产资源法
+56. "Coal Law": "urls/coal_law.txt", #煤炭法
+57. "Electric Power Law": "urls/electric_power_law.txt", #电力法
 
 ## 注意事项
 1. 确保网络连接正常，部分页面可能需要较长时间加载。
