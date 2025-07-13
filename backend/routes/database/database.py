@@ -148,7 +148,9 @@ def create_tables():
                 `title` varchar(255) NOT NULL COMMENT '法律标题',
                 `parts` json NOT NULL COMMENT '法律内容',
                 `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
-                PRIMARY KEY (`law_id`)
+                PRIMARY KEY (`law_id`),
+                INDEX `idx_create_time` (`create_time`),
+                INDEX `idx_title` (`title`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='法律表';
         """)
         

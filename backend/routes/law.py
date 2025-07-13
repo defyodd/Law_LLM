@@ -55,14 +55,23 @@ async def upload_law(
 @router.get("/getAllLaws", response_model=Result)
 def get_all_laws(db: pymysql.Connection = Depends(get_db)):
     """获取法律法规列表"""
-    laws = LawDAO.get_all_laws()
-    
-    law_list = [
-        LawItem(lawId=law.law_id, title=law.title)
-        for law in laws
-    ]
-    
-    return Result.success(data=law_list)
+    try:
+        # 使用轻量级查询，只获取 ID 和标题
+        law_titles = LawDAO.get_law_titles()
+        
+        law_list = [
+            LawItem(lawId=law['law_id'], title=law['title'])
+            for law in law_titles
+        ]
+        
+        return Result.success(data=law_list)
+    except pymysql.err.OperationalError as e:
+        if e.args[0] == 1038:  # Out of sort memory error
+            return Result.error("数据库内存不足，请联系管理员优化数据库配置")
+        else:
+            return Result.error(f"数据库操作失败: {str(e)}")
+    except Exception as e:
+        return Result.error(f"获取法律列表失败: {str(e)}")
 
 
 @router.get("/getLawInfo", response_model=Result)

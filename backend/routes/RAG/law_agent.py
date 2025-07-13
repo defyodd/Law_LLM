@@ -57,7 +57,7 @@ class LawAgent:
         print("✅ 知识库构建完成", flush=True)
 
     def _initialize_llm(self):
-        api_key = 'sk-de88dee6506d49c59ccaecb8abd91045'
+        api_key = ''
         if not api_key:
             raise ValueError("1")
         llm = OpenAI(

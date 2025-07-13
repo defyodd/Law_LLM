@@ -275,14 +275,29 @@ class LawDAO:
     def get_all_laws(limit: int = 100, offset: int = 0) -> List[Law]:
         """获取所有法律"""
         with db_manager.get_db_cursor(commit=False) as cursor:
-            sql = """
-                SELECT * FROM laws 
-                ORDER BY create_time DESC 
-                LIMIT %s OFFSET %s
-            """
-            cursor.execute(sql, (limit, offset))
-            results = cursor.fetchall()
-            return [Law.from_dict(result) for result in results]
+            try:
+                # 首先尝试带排序的查询
+                sql = """
+                    SELECT * FROM laws 
+                    ORDER BY create_time DESC 
+                    LIMIT %s OFFSET %s
+                """
+                cursor.execute(sql, (limit, offset))
+                results = cursor.fetchall()
+                return [Law.from_dict(result) for result in results]
+            except pymysql.err.OperationalError as e:
+                # 如果遇到内存不足错误，使用简单查询不排序
+                if e.args[0] == 1038:  # Out of sort memory error
+                    logger.warning(f"排序内存不足，使用备用查询方案: {e}")
+                    sql = """
+                        SELECT * FROM laws 
+                        LIMIT %s OFFSET %s
+                    """
+                    cursor.execute(sql, (limit, offset))
+                    results = cursor.fetchall()
+                    return [Law.from_dict(result) for result in results]
+                else:
+                    raise
     
     @staticmethod
     def update_law(law_id: int, **kwargs) -> bool:
@@ -317,3 +332,31 @@ class LawDAO:
             sql = "DELETE FROM laws WHERE law_id = %s"
             cursor.execute(sql, (law_id,))
             return cursor.rowcount > 0
+    
+    @staticmethod
+    def get_law_titles(limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
+        """获取法律标题列表（轻量级查询，只返回 ID 和标题）"""
+        with db_manager.get_db_cursor(commit=False) as cursor:
+            try:
+                # 只查询必要的字段，减少数据传输量
+                sql = """
+                    SELECT law_id, title FROM laws 
+                    ORDER BY law_id DESC 
+                    LIMIT %s OFFSET %s
+                """
+                cursor.execute(sql, (limit, offset))
+                results = cursor.fetchall()
+                return results
+            except pymysql.err.OperationalError as e:
+                # 如果遇到内存不足错误，使用简单查询不排序
+                if e.args[0] == 1038:  # Out of sort memory error
+                    logger.warning(f"排序内存不足，使用备用查询方案: {e}")
+                    sql = """
+                        SELECT law_id, title FROM laws 
+                        LIMIT %s OFFSET %s
+                    """
+                    cursor.execute(sql, (limit, offset))
+                    results = cursor.fetchall()
+                    return results
+                else:
+                    raise
