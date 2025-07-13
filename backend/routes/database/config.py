@@ -13,7 +13,7 @@ class Settings:
         self.db_host: str = os.getenv("DB_HOST", "localhost")
         self.db_port: int = int(os.getenv("DB_PORT", "3306"))
         self.db_user: str = os.getenv("DB_USER", "root")
-        self.db_password: str = os.getenv("DB_PASSWORD", "XKY()3.14")
+        self.db_password: str = os.getenv("DB_PASSWORD", "")
         self.db_name: str = os.getenv("DB_NAME", "law_llm")
         
         # JWT配置
