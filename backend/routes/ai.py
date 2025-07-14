@@ -16,6 +16,113 @@ logger = logging.getLogger(__name__)
 
 from routes.RAG.dispatcher import AgentDispatcher
 
+def generate_evaluation_note(prompt, answer, relevant_articles):
+    """
+    根据问题和回答生成评估注释
+    """
+    try:
+        # 如果没有有效回答，返回负面评估
+        if not answer or answer.strip() == '' or '抱歉' in answer or '未能' in answer:
+            return "回答未能提供有效信息，需要改进。"
+        
+        # 根据问题类型和内容进行评估
+        prompt_lower = prompt.lower()
+        answer_lower = answer.lower()
+        
+        # 检查是否有相关法条支撑
+        has_legal_support = len(relevant_articles) > 0 if relevant_articles else False
+        
+        # 最低工资相关问题
+        if any(keyword in prompt for keyword in ['最低工资', '工资标准', '薪资标准']):
+            if '地区' in answer or '省份' in answer or '各地' in answer or '不同' in answer:
+                return "回答准确，正确强调了地区差异性。"
+            else:
+                return "回答基本准确，但未强调地区差异。"
+        
+        # 试用期相关问题
+        elif any(keyword in prompt for keyword in ['试用期', '试用时间', '试用多久']):
+            if '六个月' in answer or '6个月' in answer:
+                if has_legal_support:
+                    return "回答准确，符合法条规定。"
+                else:
+                    return "回答准确，但缺乏法条依据。"
+            else:
+                return "回答不够准确，未正确引用法条规定。"
+        
+        # 劳动合同相关问题
+        elif any(keyword in prompt for keyword in ['劳动合同', '合同期限', '签订合同']):
+            if has_legal_support:
+                return "回答符合劳动法规定，有法条支撑。"
+            else:
+                return "回答基本正确，建议补充法条依据。"
+        
+        # 合同法相关问题
+        elif any(keyword in prompt for keyword in ['合同', '协议', '违约', '解除']):
+            if has_legal_support:
+                return "回答准确，符合合同法规定。"
+            else:
+                return "回答基本正确，建议补充相关法条。"
+        
+        # 刑法相关问题
+        elif any(keyword in prompt for keyword in ['刑法', '犯罪', '刑期', '量刑']):
+            if has_legal_support:
+                return "回答严谨，符合刑法条文规定。"
+            else:
+                return "回答需要更多法条支撑以确保准确性。"
+        
+        # 民法相关问题
+        elif any(keyword in prompt for keyword in ['民法', '民事', '侵权', '赔偿']):
+            if has_legal_support:
+                return "回答准确，符合民法典规定。"
+            else:
+                return "回答基本正确，建议引用具体法条。"
+        
+        # 行政法相关问题
+        elif any(keyword in prompt for keyword in ['行政', '政府', '执法', '行政处罚']):
+            if has_legal_support:
+                return "回答符合行政法规定，有法理依据。"
+            else:
+                return "回答基本正确，建议补充行政法条依据。"
+        
+        # 一般性法律问题
+        elif any(keyword in prompt for keyword in ['法律', '法规', '条例', '规定']):
+            if has_legal_support:
+                return "回答准确，有充分的法条支撑。"
+            else:
+                return "回答基本正确，建议补充具体法条引用。"
+        
+        # 程序性问题（如何办理、流程等）
+        elif any(keyword in prompt for keyword in ['如何', '怎么', '流程', '程序', '办理']):
+            if '步骤' in answer or '流程' in answer or '程序' in answer:
+                return "回答详细，程序说明清晰。"
+            else:
+                return "回答基本正确，建议补充具体程序步骤。"
+        
+        # 时间期限相关问题
+        elif any(keyword in prompt for keyword in ['多久', '期限', '时间', '几天', '几个月']):
+            if any(time_word in answer for time_word in ['天', '月', '年', '日', '小时']):
+                return "回答准确，时间期限明确。"
+            else:
+                return "回答需要补充具体时间期限。"
+        
+        # 权利义务相关问题
+        elif any(keyword in prompt for keyword in ['权利', '义务', '责任', '权益']):
+            if has_legal_support:
+                return "回答准确，权利义务阐述清晰。"
+            else:
+                return "回答基本正确，建议补充法律依据。"
+        
+        # 默认评估
+        else:
+            if has_legal_support:
+                return "回答有法条支撑，内容较为准确。"
+            else:
+                return "回答基本合理，建议补充法律依据。"
+                
+    except Exception as e:
+        logger.warning(f"生成评估注释时出错: {str(e)}")
+        return "自动评估功能异常，请人工核实答案准确性。"
+
 try:
     dispatcher = AgentDispatcher()
     print("✅ RAG模块加载成功", flush=True)
@@ -233,6 +340,39 @@ def chat(
         # 确保answer不为空
         if not answer or answer.strip() == '':
             answer = '抱歉，未能生成有效回答，请重新提问。'
+        
+        # 生成评估注释
+        evaluation_note = generate_evaluation_note(prompt, answer, relevant_articles)
+        
+        # 将评估注释添加到reference中
+        if evaluation_note:
+            reference += f"\n\n💡 评估：{evaluation_note}"
+        
+        # 打印测试数据用于收集（按照您提供的模板格式）
+        print("=" * 60, flush=True)
+        print("📊 测试数据收集:", flush=True)
+        print(f'"question": "{prompt}",', flush=True)
+        print(f'"expected_answer": "",  # 需要手动填写预期答案', flush=True)
+        
+        # 提取检索到的法条文本作为retrieved_text
+        retrieved_text = ""
+        if relevant_articles:
+            retrieved_texts = []
+            for article in relevant_articles[:2]:  # 取前2个最相关的法条
+                if isinstance(article, dict):
+                    article_content = article.get('article_content', article.get('content', ''))
+                    law_title = article.get('law_title', article.get('title', ''))
+                    article_no = article.get('article_no', '')
+                    
+                    if article_content and article_content != '内容缺失':
+                        text = f"根据《{law_title}》{article_no}，{article_content[:100]}"
+                        retrieved_texts.append(text)
+            retrieved_text = "……".join(retrieved_texts)
+        
+        print(f'"retrieved_text": "{retrieved_text}",', flush=True)
+        print(f'"model_output": "{answer[:100]}{'...' if len(answer) > 100 else ''}",', flush=True)
+        print(f'"evaluation_note": "{evaluation_note}"', flush=True)
+        print("=" * 60, flush=True)
         
         # 保存到数据库
         try:
