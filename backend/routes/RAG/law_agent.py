@@ -127,8 +127,113 @@ class LawAgent:
             logger.error(f"清晰度检查失败: {str(e)}")
             return '清晰'  # 如果检查失败，默认清晰
 
+    # def answer(self, question: str, max_results: int = 5, model: str = "deepseek-chat") -> Dict[str, Any]:
+    #     try:
+    #         query_type = self._analyze_query_type(question)
+    #         keywords = self._extract_keywords(question)
+    #         results = self.searcher.search(question, top_k=max_results)
+    #         answer_text = self._generate_answer(question, results, query_type, model)
+    #         eval_result = self._self_evaluate(answer_text, question)
+    #         if eval_result == '重试':
+    #             answer_text += "\n\n（注意：答案可能不完全明确，建议咨询专业律师。）"
+    #
+    #         response = {
+    #             'question': question,
+    #             'query_type': query_type,
+    #             'keywords': keywords,
+    #             'answer': answer_text,
+    #             'relevant_articles': results,
+    #             'confidence': self._calculate_confidence(results),
+    #             'suggestions': self._generate_suggestions(results, query_type),
+    #             'agent': 'LawAgent',
+    #             'type': 'chat'  # 添加类型标识
+    #         }
+    #
+    #         self.memory.save_context({"input": question}, {"output": answer_text})
+    #         self.conversation_history.append({
+    #             'question': question,
+    #             'response': response,
+    #             'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #         })
+    #
+    #         return response
+    #
+    #     except Exception as e:
+    #         logger.error(f"LawAgent.answer 出现异常: {str(e)}", exc_info=True)
+    #         # 返回错误处理响应
+    #         return {
+    #             'question': question,
+    #             'query_type': '错误处理',
+    #             'keywords': [],
+    #             'answer': f'抱歉，处理您的问题时出现错误: {str(e)}。请稍后重试或联系技术支持。',
+    #             'relevant_articles': [],
+    #             'confidence': 0.0,
+    #             'suggestions': ['请重新提问或联系技术支持'],
+    #             'agent': 'LawAgent',
+    #             'type': 'chat'
+    #         }
+    def _is_legal_question_by_llm(self, question: str) -> bool:
+        prompt = f"""请判断下面用户的问题是否属于法律相关问题，仅回答“是”或“否”，不要输出多余内容：
+
+    用户问题：{question}
+    """
+        try:
+            resp = self.llm.chat.completions.create(
+                model="deepseek-chat",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.0,
+                max_tokens=2
+            )
+            content = resp.choices[0].message.content.strip()
+            return content.startswith('是')
+        except Exception as e:
+            logger.error(f"法律领域判定LLM调用失败: {e}")
+            # 如果出错，默认走RAG流程
+            return True
     def answer(self, question: str, max_results: int = 5, model: str = "deepseek-chat") -> Dict[str, Any]:
         try:
+
+            if not self._is_legal_question_by_llm(question):
+                # 非法律问题，直接用LLM对话生成答案
+                system_msg = "你是一位智能助手，请简洁准确地回答用户问题。如果你无法回答，请直接说明。"
+                user_msg = question
+                try:
+                    resp = self.llm.chat.completions.create(
+                        model=model,
+                        messages=[
+                            {"role": "system", "content": system_msg},
+                            {"role": "user", "content": user_msg},
+                        ],
+                        stream=False,
+                        temperature=0.7,
+                        max_tokens=2000
+                    )
+                    answer_text = resp.choices[0].message.content.strip() if resp.choices else "抱歉，AI未能回答您的问题。"
+                except Exception as e:
+                    answer_text = f"抱歉，AI服务暂时不可用: {str(e)}"
+
+                response = {
+                    'question': question,
+                    'query_type': '一般咨询',
+                    'keywords': [],
+                    'answer': answer_text,
+                    'relevant_articles': [],
+                    'confidence': 0.9,
+                    'suggestions': [],
+                    'agent': 'LawAgent',
+                    'type': 'chat'
+                }
+                self.memory.save_context({"input": question}, {"output": answer_text})
+                self.conversation_history.append({
+                    'question': question,
+                    'response': response,
+                    'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                })
+                return response
+
+            # ====== 下面是你原有的“法律问题”RAG流程 ======
             query_type = self._analyze_query_type(question)
             keywords = self._extract_keywords(question)
             results = self.searcher.search(question, top_k=max_results)
@@ -146,7 +251,7 @@ class LawAgent:
                 'confidence': self._calculate_confidence(results),
                 'suggestions': self._generate_suggestions(results, query_type),
                 'agent': 'LawAgent',
-                'type': 'chat'  # 添加类型标识
+                'type': 'chat'
             }
 
             self.memory.save_context({"input": question}, {"output": answer_text})
@@ -157,7 +262,7 @@ class LawAgent:
             })
 
             return response
-            
+
         except Exception as e:
             logger.error(f"LawAgent.answer 出现异常: {str(e)}", exc_info=True)
             # 返回错误处理响应
@@ -172,6 +277,8 @@ class LawAgent:
                 'agent': 'LawAgent',
                 'type': 'chat'
             }
+
+
 
     def _generate_answer(self, question: str, results: List[Dict], query_type: str,
                          model: str = "deepseek-chat") -> str:
