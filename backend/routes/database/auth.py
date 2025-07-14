@@ -1,7 +1,7 @@
 """
 用户认证和授权中间件 - 使用 PyMySQL
 """
-from fastapi import HTTPException, Depends, status
+from fastapi import HTTPException, Depends, status, Header
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import pymysql
 from routes.database.database import get_db
@@ -14,11 +14,13 @@ security = HTTPBearer()
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    authorization: str = Header(...),
     db: pymysql.Connection = Depends(get_db)
 ) -> User:
     """获取当前用户"""
-    token = credentials.credentials
+    # 直接从Header获取token（不使用Bearer格式）
+    token = authorization
+    print(f"Received token: {token}", flush=True)
     
     # 解析JWT令牌
     payload = JwtUtil.parse_token(token)

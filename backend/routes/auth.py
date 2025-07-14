@@ -75,9 +75,11 @@ def login(
 @router.get("/getUserInfo", response_model=Result)
 def get_user_info(current_user: User = Depends(get_current_user)):
     """获取用户信息"""
+    # print(1, flush=True)
     user_info = UserInfo(
         userId=current_user.user_id,
         username=current_user.username,
         email=current_user.email
     )
+    print(user_info, flush=True)
     return Result.success(data=user_info)
