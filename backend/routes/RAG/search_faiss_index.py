@@ -95,6 +95,7 @@ class LawFAISSSearcher:
                             'article_content': self.metadata[idx]['article_content'],
                             'chapter_title': self.metadata[idx]['chapter_title'],
                             'part_title': self.metadata[idx]['part_title'],
+                            'law_title': self.metadata[idx].get('file_title', ''),  # 添加法律标题
                             'full_text': self.texts[idx]
                         }
                         results.append(result)
