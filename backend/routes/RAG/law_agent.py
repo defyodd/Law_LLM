@@ -314,14 +314,25 @@ class LawAgent:
 
     请基于上述法条内容，为用户提供准确、实用的法律解答。"""
 
+        # 获取历史对话记录
+        history = self.memory.load_memory_variables({}).get("history", [])
+        history_msgs = []
+        for h in history[-3:]:  # 只取最近3轮
+            history_msgs.append({"role": "user", "content": h["input"]})
+            history_msgs.append({"role": "assistant", "content": h["output"]})
+
+        # 构建消息列表
+        messages = [
+            {"role": "system", "content": system_msg},
+            *history_msgs,
+            {"role": "user", "content": user_msg}
+        ]
+
         # 调用LLM生成回答
         try:
             resp = self.llm.chat.completions.create(
                 model=model,
-                messages=[
-                    {"role": "system", "content": system_msg},
-                    {"role": "user", "content": user_msg},
-                ],
+                messages=messages,
                 stream=False,
                 temperature=0.7,
                 max_tokens=2000
