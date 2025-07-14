@@ -53,7 +53,6 @@ class AgentDispatcher:
             question_type = self.determine_question_type(question)
             # print(question_type)
             # 优先检查FAQ
-            from .main import conversation_histories
             if self.faq_agent and any(k in question for k in self.faq_agent.FAQS):
                 result = self.faq_agent.answer(question)
                 result["history_id"] = history_id
