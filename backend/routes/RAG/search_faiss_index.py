@@ -95,6 +95,8 @@ class LawFAISSSearcher:
                             'article_content': self.metadata[idx]['article_content'],
                             'chapter_title': self.metadata[idx]['chapter_title'],
                             'part_title': self.metadata[idx]['part_title'],
+                            'file_title': self.metadata[idx].get('file_title', ''),
+                            'subpart_title': self.metadata[idx].get('subpart_title', ''),
                             'full_text': self.texts[idx]
                         }
                         results.append(result)
@@ -122,6 +124,7 @@ class LawFAISSSearcher:
         
         for result in results:
             print(f"\n【排名 {result['rank']}】 相似度: {result['score']:.4f}", flush=True)
+            print(f"法律: {result.get('file_title', '未知法律')}", flush=True)
             print(f"编章: {result['part_title']} - {result['chapter_title']}", flush=True)
             print(f"条文: {result['article_no']}", flush=True)
             print(f"内容: {result['article_content']}", flush=True)

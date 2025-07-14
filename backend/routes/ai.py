@@ -189,7 +189,29 @@ def chat(
                 for i, article in enumerate(relevant_articles[:3], 1):
                     try:
                         if isinstance(article, dict):
-                            article_info = f"{article.get('article_no', '')} (相关度: {article.get('score', 0):.3f})"
+                            # 获取详细的法条信息
+                            article_no = article.get('article_no', '未知条文')
+                            article_content = article.get('article_content', '内容缺失')
+                            file_title = article.get('file_title', '')
+                            part_title = article.get('part_title', '')
+                            chapter_title = article.get('chapter_title', '')
+                            score = article.get('score', 0)
+                            
+                            # 构建法律来源信息
+                            law_source = file_title if file_title else "相关法律"
+                            location_info = []
+                            if part_title:
+                                location_info.append(part_title)
+                            if chapter_title:
+                                location_info.append(chapter_title)
+                            
+                            # 格式化法条信息，包含具体条文内容
+                            if location_info:
+                                full_source = f"《{law_source}》{' '.join(location_info)}"
+                            else:
+                                full_source = f"《{law_source}》"
+                            
+                            article_info = f"{full_source} {article_no} (相关度: {score:.3f})\n   条文内容：{article_content}"
                         else:
                             article_info = str(article)
                         reference += f"\n{i}. {article_info}"
