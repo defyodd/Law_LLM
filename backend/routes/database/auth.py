@@ -24,7 +24,6 @@ def get_current_user(
     
     # 解析JWT令牌
     payload = JwtUtil.parse_token(token)
-    print(f"Parsed payload: {payload}", flush=True)
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -34,7 +33,6 @@ def get_current_user(
     
     # 从payload中获取用户信息
     user_id = payload.get("id")
-    print(user_id, flush=True)
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
