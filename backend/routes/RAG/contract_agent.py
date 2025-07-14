@@ -36,7 +36,7 @@ class ContractAgent:
             return "抱歉，AI 服务暂时不可用，请稍后重试。"
 
     # 其他方法保持不变...
-    def answer(self, question: str, history: List[Dict] = None) -> dict:
+    def answer(self, question: str, history: List[Dict] = None, context_chats: list = None) -> dict:
         # 更新对话历史
         if history:
             self.conversation_history = history
@@ -66,10 +66,10 @@ class ContractAgent:
                 return self._handle_contract_modification(question)
             elif contract_type:
                 # 使用大模型生成个性化合同
-                return self._generate_smart_contract(question, contract_type)
+                return self._generate_smart_contract(question, contract_type, context_chats)
             else:
                 # 使用大模型理解用户需求
-                return self._understand_contract_needs(question)
+                return self._understand_contract_needs(question, context_chats)
 
         return {
             "agent": "ContractAgent",
@@ -127,7 +127,7 @@ class ContractAgent:
             "type": "write"
         }
 
-    def _generate_smart_contract(self, question: str, contract_type: str) -> dict:
+    def _generate_smart_contract(self, question: str, contract_type: str, context_chats: list = None) -> dict:
         """使用大模型生成个性化合同"""
         # 获取基础模板
         contract_templates = {
@@ -141,7 +141,7 @@ class ContractAgent:
         base_template = contract_templates[contract_type]()
 
         # 使用大模型根据用户需求定制合同
-        customized_contract = self._customize_contract_with_ai(base_template, question, contract_type)
+        customized_contract = self._customize_contract_with_ai(base_template, question, contract_type, context_chats)
 
         return {
             "agent": "ContractAgent",
@@ -159,9 +159,9 @@ class ContractAgent:
             "type": "write"
         }
 
-    def _understand_contract_needs(self, question: str) -> dict:
+    def _understand_contract_needs(self, question: str, context_chats: list = None) -> dict:
         """使用大模型理解用户合同需求"""
-        ai_response = self._call_ai_for_understanding(question)
+        ai_response = self._call_ai_for_understanding(question, context_chats)
 
         return {
             "agent": "ContractAgent",
@@ -174,7 +174,7 @@ class ContractAgent:
             "type": "chat"
         }
 
-    def _call_ai_for_understanding(self, question: str) -> str:
+    def _call_ai_for_understanding(self, question: str, context_chats: list = None) -> str:
         """调用大模型理解用户需求"""
         system_msg = """你是一个专业的法律合同助手。你的任务是：
 1. 理解用户的合同需求
@@ -187,18 +187,28 @@ class ContractAgent:
 请用中文回复，语言专业且易懂。"""
 
         try:
-            messages = [
-                {"role": "system", "content": system_msg},
-                *self.conversation_history,
-                {"role": "user", "content": question}
-            ]
+            messages = [{"role": "system", "content": system_msg}]
+            
+            # 添加上下文对话记录
+            if context_chats:
+                for chat in context_chats:
+                    if chat.prompt and chat.answer:
+                        messages.append({"role": "user", "content": chat.prompt})
+                        messages.append({"role": "assistant", "content": chat.answer})
+            
+            # 如果没有数据库上下文，使用内存中的历史记录作为后备
+            elif self.conversation_history:
+                messages.extend(self.conversation_history)
+            
+            # 添加当前问题
+            messages.append({"role": "user", "content": question})
 
             response = self._call_llm_api(messages)
             return response
         except Exception as e:
             return f"我可以为您生成以下类型的专业法律合同：\n• 租赁合同\n• 买卖合同\n• 借款合同\n• 劳动合同\n• 服务合同\n\n请明确您需要哪种类型的合同，以及具体的使用场景。"
 
-    def _customize_contract_with_ai(self, base_template: str, question: str, contract_type: str) -> str:
+    def _customize_contract_with_ai(self, base_template: str, question: str, contract_type: str, context_chats: list = None) -> str:
         """使用大模型定制合同内容"""
         system_msg = f"""你是一个专业的法律合同起草助手。请根据用户需求，对以下{contract_type}模板进行定制化修改：
 
@@ -215,10 +225,17 @@ class ContractAgent:
 请直接返回修改后的完整合同内容，不要添加额外说明。"""
 
         try:
-            messages = [
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": f"请根据以下需求定制合同：{question}"}
-            ]
+            messages = [{"role": "system", "content": system_msg}]
+            
+            # 添加上下文对话记录
+            if context_chats:
+                for chat in context_chats:
+                    if chat.prompt and chat.answer:
+                        messages.append({"role": "user", "content": chat.prompt})
+                        messages.append({"role": "assistant", "content": chat.answer})
+            
+            # 添加当前问题
+            messages.append({"role": "user", "content": f"请根据以下需求定制合同：{question}"})
 
             response = self._call_llm_api(messages)
             return response if response else base_template

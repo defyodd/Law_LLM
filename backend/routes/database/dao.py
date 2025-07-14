@@ -223,6 +223,21 @@ class ChatDAO:
             sql = "DELETE FROM chat WHERE chat_id = %s"
             cursor.execute(sql, (chat_id,))
             return cursor.rowcount > 0
+    
+    @staticmethod
+    def get_recent_chats_by_history_id(history_id: int, limit: int = 5) -> List[Chat]:
+        """获取指定历史记录的最近几条对话记录，用于上下文记忆"""
+        with db_manager.get_db_cursor(commit=False) as cursor:
+            sql = """
+                SELECT * FROM chat 
+                WHERE history_id = %s 
+                ORDER BY create_time DESC 
+                LIMIT %s
+            """
+            cursor.execute(sql, (history_id, limit))
+            results = cursor.fetchall()
+            # 返回时按时间正序排列（最老的在前）
+            return [Chat.from_dict(result) for result in reversed(results)]
 
 
 class LawDAO:

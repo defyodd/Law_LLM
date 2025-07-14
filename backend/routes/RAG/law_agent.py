@@ -192,20 +192,30 @@ class LawAgent:
             logger.error(f"法律领域判定LLM调用失败: {e}")
             # 如果出错，默认走RAG流程
             return True
-    def answer(self, question: str, max_results: int = 5, model: str = "deepseek-chat") -> Dict[str, Any]:
+    def answer(self, question: str, max_results: int = 5, model: str = "deepseek-chat", context_chats: list = None) -> Dict[str, Any]:
         try:
 
             if not self._is_legal_question_by_llm(question):
                 # 非法律问题，直接用LLM对话生成答案
                 system_msg = "你是一位智能助手，请简洁准确地回答用户问题。如果你无法回答，请直接说明。"
-                user_msg = question
+                
+                # 构建对话历史
+                messages = [{"role": "system", "content": system_msg}]
+                
+                # 添加上下文对话记录
+                if context_chats:
+                    for chat in context_chats:
+                        if chat.prompt and chat.answer:
+                            messages.append({"role": "user", "content": chat.prompt})
+                            messages.append({"role": "assistant", "content": chat.answer})
+                
+                # 添加当前问题
+                messages.append({"role": "user", "content": question})
+                
                 try:
                     resp = self.llm.chat.completions.create(
                         model=model,
-                        messages=[
-                            {"role": "system", "content": system_msg},
-                            {"role": "user", "content": user_msg},
-                        ],
+                        messages=messages,
                         stream=False,
                         temperature=0.7,
                         max_tokens=2000
@@ -237,7 +247,7 @@ class LawAgent:
             query_type = self._analyze_query_type(question)
             keywords = self._extract_keywords(question)
             results = self.searcher.search(question, top_k=max_results)
-            answer_text = self._generate_answer(question, results, query_type, model)
+            answer_text = self._generate_answer(question, results, query_type, model, context_chats)
             eval_result = self._self_evaluate(answer_text, question)
             if eval_result == '重试':
                 answer_text += "\n\n（注意：答案可能不完全明确，建议咨询专业律师。）"
@@ -281,7 +291,7 @@ class LawAgent:
 
 
     def _generate_answer(self, question: str, results: List[Dict], query_type: str,
-                         model: str = "deepseek-chat") -> str:
+                         model: str = "deepseek-chat", context_chats: list = None) -> str:
         # 构建检索到的法条内容
         context = ""
         if results:
@@ -314,19 +324,26 @@ class LawAgent:
 
     请基于上述法条内容，为用户提供准确、实用的法律解答。"""
 
-        # 获取历史对话记录
-        history = self.memory.load_memory_variables({}).get("history", [])
-        history_msgs = []
-        for h in history[-3:]:  # 只取最近3轮
-            history_msgs.append({"role": "user", "content": h["input"]})
-            history_msgs.append({"role": "assistant", "content": h["output"]})
-
-        # 构建消息列表
-        messages = [
-            {"role": "system", "content": system_msg},
-            *history_msgs,
-            {"role": "user", "content": user_msg}
-        ]
+        # 构建消息列表，优先使用数据库中的上下文记录
+        messages = [{"role": "system", "content": system_msg}]
+        
+        # 添加数据库中的上下文对话记录
+        if context_chats:
+            for chat in context_chats:
+                if chat.prompt and chat.answer:
+                    messages.append({"role": "user", "content": chat.prompt})
+                    messages.append({"role": "assistant", "content": chat.answer})
+        
+        # 如果没有数据库上下文，使用内存中的历史记录作为后备
+        elif hasattr(self, 'memory'):
+            history = self.memory.load_memory_variables({}).get("history", [])
+            for h in history[-3:]:  # 只取最近3轮
+                if hasattr(h, 'input') and hasattr(h, 'output'):
+                    messages.append({"role": "user", "content": h.input})
+                    messages.append({"role": "assistant", "content": h.output})
+        
+        # 添加当前问题
+        messages.append({"role": "user", "content": user_msg})
 
         # 调用LLM生成回答
         try:
