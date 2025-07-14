@@ -4,7 +4,7 @@ from openai import OpenAI
 
 
 class ContractAgent:
-    def __init__(self, api_key: str = 'sk-de88dee6506d49c59ccaecb8abd91045', model: str = "deepseek-chat"):
+    def __init__(self, api_key: str = '', model: str = "deepseek-chat"):
         self.api_key = api_key
         self.model = model
         self.conversation_history = []
