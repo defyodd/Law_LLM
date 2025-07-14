@@ -97,8 +97,8 @@ def search_laws(
 ):
     """搜索法律法规"""
     try:
-        # 首先按标题搜索
-        laws = LawDAO.search_laws(keyword)
+        # 获取所有法律，只在内容中搜索
+        laws = LawDAO.get_all_laws()
         
         search_results = []
         
@@ -115,7 +115,7 @@ def search_laws(
                                     article_no = article.get('article_no', '')
                                     article_content = article.get('article_content', '')
                                     
-                                    # 检查是否包含关键字
+                                    # 只检查内容是否包含关键字，不搜索标题
                                     if (keyword in chapter_title or 
                                         keyword in article_no or 
                                         keyword in article_content):
