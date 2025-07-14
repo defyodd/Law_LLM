@@ -132,9 +132,18 @@ def chat(
         # 记录输入参数
         print(f"收到聊天请求 - prompt: {prompt[:100]}..., historyId: {historyId}, model: {model}", flush=True)
         
+        # 获取最近的对话记录用于上下文记忆
+        context_chats = []
+        try:
+            context_chats = ChatDAO.get_recent_chats_by_history_id(historyId, limit=5)
+            print(f"获取到 {len(context_chats)} 条历史对话记录用于上下文记忆", flush=True)
+        except Exception as context_error:
+            logger.warning(f"获取上下文记录失败: {str(context_error)}")
+            context_chats = []
+        
         # 调用RAG模块进行问答
         try:
-            result = dispatcher.route_question(prompt, historyId, model)
+            result = dispatcher.route_question(prompt, historyId, model, context_chats)
             print(result, flush=True)
             print(f"RAG模块返回结果类型: {type(result)}", flush=True)
             if isinstance(result, dict):

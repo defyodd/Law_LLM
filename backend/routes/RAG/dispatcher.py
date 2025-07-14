@@ -47,7 +47,7 @@ class AgentDispatcher:
         # 默认为聊天咨询
         return "chat"
 
-    def route_question(self, question: str, history_id: int, model: str) -> dict:
+    def route_question(self, question: str, history_id: int, model: str, context_chats: list = None) -> dict:
         try:
             # 判断问题类型
             question_type = self.determine_question_type(question)
@@ -64,7 +64,7 @@ class AgentDispatcher:
             # 根据类型调用相应的agent
             if question_type == "write":
                 if self.contract_agent:
-                    result = self.contract_agent.answer(question)
+                    result = self.contract_agent.answer(question, context_chats=context_chats)
                     result["history_id"] = history_id
                     result["model_used"] = model
                     result["type"] = "write"
@@ -80,7 +80,7 @@ class AgentDispatcher:
             else:
                 # chat 类型调用 law_agent
                 if self.law_agent:
-                    result = self.law_agent.answer(question, model=model)
+                    result = self.law_agent.answer(question, model=model, context_chats=context_chats)
                     result["history_id"] = history_id
                     result["model_used"] = model
                     result["type"] = "chat"
