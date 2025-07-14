@@ -185,39 +185,47 @@ def chat(
             # 添加参考法条信息
             relevant_articles = result.get('relevant_articles', [])
             if relevant_articles:
-                reference += "\n\n参考法条："
+                reference += "\n\n📚 参考法条："
                 for i, article in enumerate(relevant_articles[:3], 1):
                     try:
                         if isinstance(article, dict):
-                            # 获取详细的法条信息
+                            # 获取法条的详细信息
                             article_no = article.get('article_no', '未知条文')
-                            article_content = article.get('article_content', '内容缺失')
-                            file_title = article.get('file_title', '')
+                            article_content = article.get('article_content', article.get('content', '内容缺失'))
+                            law_title = article.get('law_title', article.get('title', ''))
                             part_title = article.get('part_title', '')
                             chapter_title = article.get('chapter_title', '')
                             score = article.get('score', 0)
                             
-                            # 构建法律来源信息
-                            law_source = file_title if file_title else "相关法律"
-                            location_info = []
-                            if part_title:
-                                location_info.append(part_title)
-                            if chapter_title:
-                                location_info.append(chapter_title)
+                            # 构建法条信息
+                            article_info = f"\n\n【{i}】{article_no}"
                             
-                            # 格式化法条信息，包含具体条文内容
-                            if location_info:
-                                full_source = f"《{law_source}》{' '.join(location_info)}"
-                            else:
-                                full_source = f"《{law_source}》"
+                            # 添加法律名称和章节信息
+                            if law_title:
+                                article_info += f"\n📖 法律：{law_title}"
+                            if part_title or chapter_title:
+                                section_info = " - ".join(filter(None, [part_title, chapter_title]))
+                                if section_info:
+                                    article_info += f"\n📑 章节：{section_info}"
                             
-                            article_info = f"{full_source} {article_no} (相关度: {score:.3f})\n   条文内容：{article_content}"
+                            # 添加条文内容
+                            if article_content and article_content != '内容缺失':
+                                # 如果内容过长，进行适当截取
+                                if len(article_content) > 200:
+                                    article_content = article_content[:200] + "..."
+                                article_info += f"\n📄 内容：{article_content}"
+                            
+                            # 添加相关度
+                            article_info += f"\n🎯 相关度：{score:.3f}"
+                            
                         else:
-                            article_info = str(article)
-                        reference += f"\n{i}. {article_info}"
+                            article_info = f"\n\n【{i}】{str(article)}"
+                        
+                        reference += article_info
+                        
                     except Exception as article_error:
                         logger.warning(f"处理参考法条时出错: {str(article_error)}")
-                        reference += f"\n{i}. 法条信息处理失败"
+                        reference += f"\n\n【{i}】法条信息处理失败：{str(article_error)}"
         else:
             answer = str(result) if result else '抱歉，未能获取到回答。'
             reference = '本次回答由AI生成'
