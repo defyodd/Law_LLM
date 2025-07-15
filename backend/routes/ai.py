@@ -248,9 +248,20 @@ def chat(
             logger.warning(f"获取上下文记录失败: {str(context_error)}")
             context_chats = []
         
+        # 获取历史记录类型
+        history_type = None
+        try:
+            history_record = HistoryDAO.get_history_by_id(historyId)
+            if history_record:
+                history_type = history_record.type
+                print(f"从数据库获取到历史记录类型: {history_type}", flush=True)
+        except Exception as history_error:
+            logger.warning(f"获取历史记录类型失败: {str(history_error)}")
+            history_type = None
+        
         # 调用RAG模块进行问答
         try:
-            result = dispatcher.route_question(prompt, historyId, model, context_chats)
+            result = dispatcher.route_question(prompt, historyId, model, context_chats, history_type)
             print(result, flush=True)
             print(f"RAG模块返回结果类型: {type(result)}", flush=True)
             if isinstance(result, dict):

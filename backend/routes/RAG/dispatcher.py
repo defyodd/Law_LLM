@@ -47,18 +47,23 @@ class AgentDispatcher:
         # 默认为聊天咨询
         return "chat"
 
-    def route_question(self, question: str, history_id: int, model: str, context_chats: list = None) -> dict:
+    def route_question(self, question: str, history_id: int, model: str, context_chats: list = None, history_type: str = None) -> dict:
         try:
-            # 判断问题类型
-            question_type = self.determine_question_type(question)
-            # print(question_type)
+            # 如果从数据库获取到历史记录类型为"write"，直接使用该类型，不再进行问题类型判断
+            if history_type == "writ":
+                question_type = "write"
+                print(f"使用数据库历史记录类型: {question_type}")
+            else:
+                # 判断问题类型
+                question_type = self.determine_question_type(question)
+                print(f"通过问题分析判断类型: {question_type}")
             # 优先检查FAQ
-            if self.faq_agent and any(k in question for k in self.faq_agent.FAQS):
-                result = self.faq_agent.answer(question)
-                result["history_id"] = history_id
-                result["model_used"] = model
-                result["type"] = "chat"  # FAQ 默认为 chat 类型
-                return result
+            # if self.faq_agent and any(k in question for k in self.faq_agent.FAQS):
+            #     result = self.faq_agent.answer(question)
+            #     result["history_id"] = history_id
+            #     result["model_used"] = model
+            #     result["type"] = "chat"  # FAQ 默认为 chat 类型
+            #     return result
 
             # 根据类型调用相应的agent
             if question_type == "write":
