@@ -84,7 +84,7 @@ class ContractAgent:
 
     def _is_contract_modification(self, question: str) -> bool:
         """检测是否为合同修改请求"""
-        modification_keywords = ["修改", "调整", "更改", "完善", "补充", "删除", "替换"]
+        modification_keywords = ["修改", "调整", "更改", "完善", "补充", "删除", "替换","增加"]
         return any(kw in question for kw in modification_keywords)
 
     def _handle_contract_modification(self, question: str) -> dict:
