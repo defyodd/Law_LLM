@@ -1,4 +1,4 @@
-# 法律AI助手 - FastAPI后端
+# 律智AI助手 - FastAPI后端
 
 这是使用FastAPI重新实现的法律AI助手后端服务，集成了RAG检索增强生成、多Agent架构和智能法律服务功能。
 
@@ -138,12 +138,6 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 应用将在 http://localhost:8000 启动
 
-## 📚 API文档
-
-启动应用后，可以访问以下地址查看API文档：
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-- **健康检查**: http://localhost:8000/health
 
 ## 🗄️ 数据库
 
@@ -284,18 +278,8 @@ LOG_LEVEL=info               # 日志级别
 ## 📊 性能指标
 
 - **响应时间**: API平均响应时间 < 500ms
-- **并发支持**: 支持100+并发连接
 - **检索性能**: FAISS检索 < 100ms
 - **内存占用**: 基础运行 ~200MB，加载RAG模块 ~500MB
 
-## 🔗 相关文档
 
-- [项目总体文档](../README.md)
-- [RAG模块文档](./routes/RAG/README.md)
-- [Agent设计文档](./routes/RAG/Agent.md)
-- [接口详细文档](../接口文档.md)
-- [测试指南](../README_测试指南.md)
 
----
-
-> 💡 **提示**: 如果在使用过程中遇到问题，请查看相关文档或提交Issue。
