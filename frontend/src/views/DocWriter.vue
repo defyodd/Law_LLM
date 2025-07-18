@@ -47,7 +47,6 @@
       >
         <div class="writer-header">
           <div class="doc-title">
-            <!-- 移除标题显示，只保留固定文本 -->
             <span>AI文书撰写</span>
           </div>
           
@@ -74,7 +73,6 @@
             <div class="writing-header">
               <h3>撰写区</h3>
               <div class="writing-controls">
-                <!-- 移除清空按钮，因为它应该在预览区 -->
               </div>
             </div>
             
@@ -164,11 +162,6 @@ import useUserInfoStore from '@/stores/user.js'
 import useChatIdStore from '@/stores/chatId.js'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
-// 移除文档导出相关的依赖，只保留docx（如果需要）
-// import { Document, Packer, Paragraph, TextRun } from 'docx'
-// import { jsPDF } from 'jspdf'
-// import 'jspdf-autotable'
-// import html2canvas from 'html2canvas'
 
 const userInfoStore = useUserInfoStore()
 const chatIdStore = useChatIdStore()
@@ -257,7 +250,7 @@ const sendMessage = async () => {
   // 如果没有当前文档ID，创建新文档
   if (!currentDocId.value) {
     try {
-      // 移除"AI文书 - "前缀，直接使用用户输入的前10个字符作为标题
+      // 直接使用用户输入的前10个字符作为标题
       const docTitle = messageContent.substring(0, 20) + (messageContent.length > 20 ? '...' : '')
       
       // 调用后端API创建新文档，使用'writ'类型
@@ -492,7 +485,7 @@ const handleDocumentCommand = async (docId, command) => {
   }
 }
 
-// 清空内容 - 更新提示文本，明确是清空预览区域
+// 清空内容 
 const clearContent = () => {
   ElMessageBox.confirm('确定要清空文档预览内容吗？', '提示', {
     confirmButtonText: '确定',
@@ -537,10 +530,9 @@ const handleExport = async (format) => {
     let docTitle = currentDocument.value?.title || 'AI文书'
     const content = generatedDocument.value
     
-    // 尝试从文档内容中提取标题(第一个#开头的行，或者第一行内容)
+    // 尝试从文档内容中提取标题
     const titleMatch = content.match(/^#\s+(.+)$/m) || content.match(/^(.+)$/m)
     if (titleMatch && titleMatch[1]) {
-      // 使用提取出的标题，并去除可能的Markdown符号
       docTitle = titleMatch[1].replace(/[#*_]/g, '').trim()
     }
     

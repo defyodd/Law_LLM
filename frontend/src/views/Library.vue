@@ -4,32 +4,32 @@ import { getAllLaws, uploadLawJson, searchLaws } from '@/services/law.js'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
-const router = useRouter() // 导入路由
+const router = useRouter() 
 const searchQuery = ref('')
 const showCards = ref(false)
-const laws = ref([]) // 存储从后端获取的法律法规
+const laws = ref([]) 
 const loading = ref(false) // 加载状态
-const uploading = ref(false) // 上传状态
+const uploading = ref(false) 
 const fileInput = ref(null) // 文件输入引用
 const selectedLawId = ref(null) // 添加选中的法律ID状态
 
 // 添加搜索状态和结果变量
-const searchLoading = ref(false) // 搜索加载状态
-const searchResults = ref([]) // 存储搜索结果
-const showSearchResults = ref(false) // 控制是否显示搜索结果
+const searchLoading = ref(false) 
+const searchResults = ref([]) 
+const showSearchResults = ref(false) 
 
 // 法律相关图标数组
 const legalIcons = [
-  'fas fa-gavel',           // 锤子
-  'fas fa-balance-scale',   // 天平
-  'fas fa-book',            // 书籍
-  'fas fa-university',      // 大楼/法院
-  'fas fa-landmark',        // 地标/法院
-  'fas fa-scroll',          // 卷轴
-  'fas fa-file-contract',   // 合同
-  'fas fa-shield-alt',      // 盾牌
-  'fas fa-paragraph',       // 段落
-  'fas fa-stamp'            // 印章
+  'fas fa-gavel',           
+  'fas fa-balance-scale',   
+  'fas fa-book',            
+  'fas fa-university',      
+  'fas fa-landmark',        
+  'fas fa-scroll',          
+  'fas fa-file-contract',   
+  'fas fa-shield-alt',      
+  'fas fa-paragraph',       
+  'fas fa-stamp'            
 ]
 
 // 获取随机图标
@@ -100,20 +100,19 @@ const selectLaw = (law) => {
   // 记录选中的法律ID
   selectedLawId.value = law.lawId
   
-  // 延迟导航，以便动画效果完成
   setTimeout(() => {
     // 导航到法律法规详情页
     router.push(`/law/${law.lawId}`)
-    // 重置选中状态
+
     setTimeout(() => {
       selectedLawId.value = null
     }, 100)
-  }, 400) // 动画持续时间
+  }, 400) 
 }
 
 // 根据搜索结果跳转到法律详情
 const viewLawDetail = (result) => {
-  // 直接使用 lawId 跳转到法律详情页，并传递章节和条款信息用于定位
+
   console.log('查看法律详情:', result.title, 'lawId:', result.lawId)
   router.push({
     path: `/law/${result.lawId}`,
@@ -168,7 +167,6 @@ onMounted(() => {
   // 获取法律法规数据
   fetchLaws()
   
-  // 延迟显示内容以触发动画
   setTimeout(() => {
     showCards.value = true
   }, 100)
@@ -244,7 +242,7 @@ onMounted(() => {
       <div class="section-header list-item" :style="{ animationDelay: '0.2s' }" :class="{ 'stagger-enter': showCards }">
         <h2 class="section-title">法律法规</h2>
         
-        <!-- 添加上传按钮 -->
+        <!-- 上传按钮 -->
         <div class="upload-container">
           <input 
             type="file" 
@@ -456,7 +454,6 @@ onMounted(() => {
     border-color: var(--accent);
   }
   
-  /* 添加选中动画效果 */
   &.card-selected {
     animation: card-zoom-out 0.5s forwards;
     border-color: var(--accent);
@@ -488,7 +485,6 @@ onMounted(() => {
   }
 }
 
-/* 添加进入动画 */
 .list-item {
   opacity: 0;
   transform: translateY(30px);
@@ -506,7 +502,6 @@ onMounted(() => {
   }
 }
 
-/* 添加缩放动画 */
 @keyframes card-zoom-out {
   0% {
     transform: scale(1) translateY(-5px);
@@ -519,7 +514,6 @@ onMounted(() => {
   }
 }
 
-/* 搜索结果样式 */
 .search-results-container {
   background: white;
   border-radius: 1rem;
@@ -746,7 +740,6 @@ onMounted(() => {
   }
 }
 
-/* 添加加载中和无数据样式 */
 .loading-container {
   display: flex;
   flex-direction: column;

@@ -47,21 +47,6 @@
       >
         <div class="chat-header">
           <div class="chat-title">AI法律咨询</div>
-          <!-- 注释掉模型选择器 -->
-          <!-- <div class="model-selector">
-            <div class="current-model-label">当前模型：{{ getCurrentModelLabel }}</div>
-            <el-select v-model="currentModel" placeholder="选择模型" size="default" @change="handleModelChange">
-              <template #prefix>
-                <i class="fas fa-robot model-icon"></i>
-              </template>
-              <el-option
-                v-for="model in availableModels"
-                :key="model.value"
-                :label="model.label"
-                :value="model.value"
-              />
-            </el-select>
-          </div> -->
           <div class="chat-status">
             <div class="status-indicator"></div>
             <span>AI助手在线</span>
@@ -78,7 +63,7 @@
             :is-thinking="isThinking && index === currentMessages.length - 1"
           />
           
-          <!-- 常见问题按钮区域 - 保留这个 -->
+
           <div class="quick-questions" v-if="showQuickQuestions">
             <h3>你可能想问：</h3>
             <div class="questions-container">
@@ -112,7 +97,7 @@
               <i class="fas fa-paper-plane"></i>
             </button>
           </div>
-          <!-- 移除这里的快捷建议按钮 -->
+  
         </div>
       </div>
     </div>
@@ -138,15 +123,6 @@ const isStreaming = ref(false)
 const isWaiting = ref(false)
 const isThinking = ref(false)
 
-// 注释掉模型相关数据
-// const availableModels = [
-//   { value: 'deepseek-chat', label: 'deepseek-chat' },
-//   { value: 'Qwen3', label: 'Qwen3' },
-//   { value: 'gpt-4', label: 'GPT-4' },
-//   { value: 'claude-3', label: 'Claude 3' },
-//   { value: 'ChatGLM', label: 'ChatGLM' },
-// ]
-// const currentModel = ref('deepseek-chat')
 
 const currentChatId = ref(chatIdStore.chatId || null)
 const currentMessages = ref([])
@@ -234,8 +210,6 @@ const sendMessage = async () => {
   isThinking.value = false
   
   try {
-    // 注释掉模型参数，使用默认模型
-    // const streamReader = await chatAPI.sendMessage(messageContent, originalChatId, currentModel.value)
     const streamReader = await chatAPI.sendMessage(messageContent, originalChatId, 'deepseek-chat')
     
     await streamReader.read(({ content, done, referenceFound, reference }) => {
@@ -394,18 +368,6 @@ const handleQuickQuestion = (question) => {
   showQuickQuestions.value = false
 }
 
-// 注释掉模型切换处理函数
-// const handleModelChange = (model) => {
-//   ElMessage.success(`已切换到 ${availableModels.find(m => m.value === model).label} 模型`)
-//   // 这里可以添加更多逻辑，例如通知后端已切换模型
-// }
-
-// 注释掉当前模型名称的计算属性
-// const getCurrentModelLabel = computed(() => {
-//   const model = availableModels.find(m => m.value === currentModel.value)
-//   return model ? model.label : '未选择'
-// })
-
 onMounted(async () => {
   await loadChatHistory()
   
@@ -454,7 +416,7 @@ onMounted(async () => {
     border-bottom: 1px solid var(--gray);
     
     h2 {
-      font-size: 20px; // 从 18px 改为 20px
+      font-size: 20px; 
       font-weight: 600;
       color: var(--dark);
       margin: 0;
@@ -471,7 +433,7 @@ onMounted(async () => {
       border: none;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 16px; // 从 14px 改为 16px
+      font-size: 16px; 
       
       &:hover {
         background: #3a76d8;
@@ -479,7 +441,7 @@ onMounted(async () => {
       }
       
       i {
-        font-size: 14px; // 从 12px 改为 14px
+        font-size: 14px;
       }
     }
   }
@@ -510,8 +472,8 @@ onMounted(async () => {
       
       i {
         color: var(--accent);
-        font-size: 18px; // 从 16px 改为 18px
-        width: 20px; // 从 18px 改为 20px
+        font-size: 18px; 
+        width: 20px;
         flex-shrink: 0;
       }
       
@@ -520,7 +482,7 @@ onMounted(async () => {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 16px; // 从 14px 改为 16px
+        font-size: 16px; 
         color: var(--dark);
       }
       
@@ -529,7 +491,7 @@ onMounted(async () => {
         min-height: auto;
         
         i {
-          font-size: 16px; // 从 14px 改为 16px
+          font-size: 16px; 
           color: var(--dark-gray);
         }
       }
@@ -562,44 +524,6 @@ onMounted(async () => {
       color: var(--dark);
     }
     
-    /* 注释掉模型选择器样式 */
-    /* .model-selector {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-left: auto;
-      margin-right: 20px;
-      
-      .current-model-label {
-        font-size: 16px;
-        font-weight: 500;
-        color: var(--dark);
-        white-space: nowrap;
-      }
-      
-      .model-icon {
-        color: var(--accent);
-        font-size: 16px;
-        margin-right: 4px;
-      }
-      
-      :deep(.el-input__wrapper) {
-        box-shadow: 0 0 0 1px var(--gray) inset;
-        background-color: var(--light);
-        min-width: 120px;
-        padding: 0 12px;
-      }
-      
-      :deep(.el-input__inner) {
-        color: var(--dark);
-        font-size: 16px;
-        font-weight: 500;
-      }
-
-      :deep(.el-select .el-input.is-focus .el-input__wrapper) {
-        box-shadow: 0 0 0 1px var(--accent) inset;
-      }
-    } */
     
     .chat-status {
       display: flex;
@@ -657,7 +581,7 @@ onMounted(async () => {
         padding: 0.75rem;
         color: var(--dark);
         font-family: inherit;
-        font-size: 16px; // 从 1rem 改为 16px
+        font-size: 16px; 
         line-height: 1.5;
         max-height: 150px;
         min-height: 24px;
@@ -713,7 +637,7 @@ onMounted(async () => {
   border: 1px solid var(--gray);
   
   h3 {
-    font-size: 18px; // 从 16px 改为 18px
+    font-size: 18px; 
     margin-bottom: 16px;
     color: var(--dark);
     font-weight: 600;
@@ -731,7 +655,7 @@ onMounted(async () => {
       border: 1px solid var(--gray);
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 16px; // 从 14px 改为 16px
+      font-size: 16px; 
       color: var(--dark);
       
       &:hover {
@@ -795,12 +719,12 @@ onMounted(async () => {
       padding: 12px;
       
       h2 {
-        font-size: 18px; // 移动端适当缩小
+        font-size: 18px; 
       }
       
       .new-chat {
         padding: 4px 8px;
-        font-size: 14px; // 移动端适当缩小
+        font-size: 14px;
       }
     }
     
@@ -811,7 +735,7 @@ onMounted(async () => {
         padding: 6px 8px;
         
         .title {
-          font-size: 14px; // 移动端适当缩小
+          font-size: 14px;
         }
       }
     }
@@ -829,32 +753,8 @@ onMounted(async () => {
       gap: 8px;
       
       .chat-title {
-        font-size: 20px; // 移动端适当缩小
+        font-size: 20px; 
       }
-      
-      /* 注释掉移动端模型选择器样式 */
-      /* .model-selector {
-        order: 3;
-        width: 100%;
-        margin: 8px 0 0 0;
-        flex-wrap: wrap;
-        
-        .current-model-label {
-          width: 100%;
-          margin-bottom: 6px;
-          font-size: 14px;
-        }
-        
-        :deep(.el-select) {
-          flex: 1;
-          max-width: 200px;
-        }
-        
-        :deep(.el-input__inner) {
-          font-size: 16px;
-          font-weight: 500;
-        }
-      } */
     }
     
     .chat-messages {
@@ -932,7 +832,7 @@ onMounted(async () => {
   background: var(--dark-gray);
 }
 
-/* 暗黑模式适配 */
+
 @media (prefers-color-scheme: dark) {
   .sidebar,
   .chat-main {

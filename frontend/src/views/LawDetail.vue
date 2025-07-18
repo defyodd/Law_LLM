@@ -120,7 +120,6 @@ onMounted(() => {
       
       <h1 v-if="lawDetail" class="law-title">{{ lawDetail.title }}</h1>
       <div class="law-meta" v-if="lawDetail">
-        <!-- 可以在这里添加法律的元数据，如发布日期等 -->
       </div>
     </div>
     
@@ -152,7 +151,7 @@ onMounted(() => {
             <i class="fas" :class="activeChapters[`${partIndex}-${chapterIndex}`] ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
           </div>
           
-          <!-- 章节内容 - 添加过渡动画 -->
+          <!-- 章节内容 -->
           <transition 
             name="chapter-transition" 
             @enter="el => el.style.height = el.scrollHeight + 'px'"
@@ -183,13 +182,13 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .law-detail {
-  max-width: 1200px; /* 增加整体宽度，从1000px改为1200px */
+  max-width: 1200px; 
   margin: 0 auto;
   padding: 2rem;
 }
 
 .law-detail-header {
-  margin-bottom: 2.5rem; /* 增加下边距 */
+  margin-bottom: 2.5rem;
   
   .back-btn {
     display: inline-flex;
@@ -216,10 +215,10 @@ onMounted(() => {
   }
   
   .law-title {
-    font-size: 2.2rem; /* 增加标题字体大小，从2rem改为2.2rem */
+    font-size: 2.2rem;
     font-weight: 700;
     color: var(--dark);
-    margin-bottom: 1.2rem; /* 略微增加下边距 */
+    margin-bottom: 1.2rem; 
     text-align: center;
   }
   
@@ -257,7 +256,7 @@ onMounted(() => {
   border-radius: 1rem;
   box-shadow: var(--shadow);
   overflow: hidden;
-  padding: 0.5rem 0; /* 添加上下内边距 */
+  padding: 0.5rem 0; 
 }
 
 .law-part {
@@ -285,7 +284,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.4rem 1.8rem; /* 增加内边距，从1.2rem 1.5rem改为1.4rem 1.8rem */
+  padding: 1.4rem 1.8rem; 
   cursor: pointer;
   transition: background-color 0.3s ease;
   
@@ -299,7 +298,7 @@ onMounted(() => {
   }
   
   .chapter-title {
-    font-size: 1.4rem; /* 增加章节标题字体大小，从1.2rem改为1.4rem */
+    font-size: 1.4rem; 
     font-weight: 600;
     color: var(--dark);
     margin: 0;
@@ -308,7 +307,7 @@ onMounted(() => {
   i {
     color: var(--dark-gray);
     transition: transform 0.3s ease;
-    font-size: 1.1rem; /* 增加图标大小 */
+    font-size: 1.1rem; 
     
     &.fa-chevron-up {
       transform: rotate(0);
@@ -321,14 +320,13 @@ onMounted(() => {
 }
 
 .chapter-content {
-  padding: 0 2rem; /* 增加水平内边距，从0 1.5rem改为0 2rem */
+  padding: 0 2rem; 
   overflow: hidden;
 }
 
-/* 添加章节过渡动画 - 增加动画时间 */
 .chapter-transition-enter-active,
 .chapter-transition-leave-active {
-  transition: all 0.6s ease-in-out; /* 从0.3s改为0.6s，让动画更慢 */
+  transition: all 0.6s ease-in-out; 
   overflow: hidden;
 }
 
@@ -348,8 +346,8 @@ onMounted(() => {
 
 .law-article {
   display: flex;
-  gap: 2rem; /* 增加间距，从1.5rem改为2rem */
-  padding: 1.4rem 0; /* 增加上下内边距，从1.2rem改为1.4rem */
+  gap: 2rem; 
+  padding: 1.4rem 0; 
   border-bottom: 1px solid var(--gray);
   
   &:last-child {
@@ -360,19 +358,18 @@ onMounted(() => {
     color: var(--accent);
     font-weight: 600;
     flex-shrink: 0;
-    width: 80px; /* 增加宽度，从70px改为80px */
-    font-size: 1.1rem; /* 增加字体大小 */
+    width: 80px; 
+    font-size: 1.1rem; 
   }
   
   .article-content {
     flex: 1;
-    line-height: 1.8; /* 增加行高，从1.6改为1.8 */
+    line-height: 1.8; 
     color: var(--dark);
-    font-size: 1.1rem; /* 增加字体大小 */
+    font-size: 1.1rem; 
   }
 }
 
-/* 添加高亮条款样式 */
 .highlighted-article {
   background-color: rgba(94, 129, 244, 0.1);
   border-radius: 0.5rem;
@@ -419,11 +416,11 @@ onMounted(() => {
   }
   
   .law-detail-header .law-title {
-    font-size: 1.8rem; /* 适当增加 */
+    font-size: 1.8rem; 
   }
   
   .chapter-header .chapter-title {
-    font-size: 1.3rem; /* 适当增加 */
+    font-size: 1.3rem; 
   }
   
   .law-article {
@@ -432,11 +429,11 @@ onMounted(() => {
     
     .article-number {
       width: auto;
-      font-size: 1.05rem; /* 保持稍大 */
+      font-size: 1.05rem; 
     }
     
     .article-content {
-      font-size: 1.05rem; /* 保持稍大 */
+      font-size: 1.05rem; 
     }
   }
 }

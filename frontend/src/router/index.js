@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus'
 const routes = [
   {
     path: '/',
-    redirect: '/library' // 改为重定向到法律文库
+    redirect: '/library' 
   },
   {
     path: '/login',
@@ -36,7 +36,7 @@ const routes = [
     name: 'LawDetail',
     component: () => import('@/views/LawDetail.vue')
   },
-  // 404页面路由 - 必须放在最后
+  // 404页面路由
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

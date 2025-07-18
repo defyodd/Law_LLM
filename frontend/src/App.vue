@@ -9,12 +9,12 @@ const route = useRoute()
 const userInfoStore = useUserInfoStore()
 const tokenStore = useTokenStore()
 
-// 添加路由就绪状态
+// 路由就绪状态
 const routerReady = ref(false)
 const sidebarCollapsed = ref(false)
 const showUserDropdown = ref(false)
 
-// 添加退出动画状态
+// 退出动画状态
 const isLoggingOut = ref(false)
 
 const navItems = [
@@ -85,7 +85,7 @@ onMounted(() => {
     routerReady.value = true
   })
   
-  // 添加全局点击事件监听
+  // 全局点击事件监听
   document.addEventListener('click', handleClickOutside)
 })
 
@@ -103,7 +103,7 @@ const showRouterLoading = computed(() => {
   return !routerReady.value && !shouldHideLayout.value
 })
 
-// 添加过渡动画控制
+// 过渡动画控制
 const getTransitionName = (route) => {
   // 根据路由路径确定过渡动画类型
   const routeDepth = {
@@ -126,14 +126,14 @@ const getTransitionName = (route) => {
   }
 }
 
-// 动画钩子函数
+
 const onBeforeEnter = (el) => {
   el.style.opacity = '0'
   el.style.transform = 'translateY(20px)'
 }
 
 const onEnter = (el, done) => {
-  el.offsetHeight // 强制重绘
+  el.offsetHeight 
   el.style.transition = 'all 0.4s cubic-bezier(0.55, 0, 0.1, 1)'
   el.style.opacity = '1'
   el.style.transform = 'translateY(0)'
@@ -647,8 +647,6 @@ onMounted(() => {
 .logout-btn i {
   font-size: 14px;
 }
-
-/* 文字淡入淡出动画 - 修复闪烁 */
 .logo-text-enter-active,
 .nav-text-enter-active {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
@@ -671,7 +669,6 @@ onMounted(() => {
   transform: translateX(-10px);
 }
 
-/* 防止动画期间的布局抖动 */
 .sidebar * {
   box-sizing: border-box;
 }
@@ -792,7 +789,6 @@ onMounted(() => {
   }
 }
 
-/* 提升触摸友好性 */
 @media (hover: none) and (pointer: coarse) {
   .nav-item {
     padding: 18px 20px;
@@ -843,7 +839,6 @@ onMounted(() => {
   transform: translateX(-50px) scale(1.05);
 }
 
-/* 向右滑动 (后退) */
 .slide-right-enter-active,
 .slide-right-leave-active {
   transition: all 0.4s cubic-bezier(0.55, 0, 0.1, 1);
@@ -859,7 +854,6 @@ onMounted(() => {
   transform: translateX(50px) scale(1.05);
 }
 
-/* 优化动画性能 */
 .fade-enter-active,
 .fade-leave-active,
 .slide-left-enter-active,
@@ -872,7 +866,6 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* 为动画添加模糊效果 (可选) */
 .slide-left-leave-to,
 .slide-right-leave-to {
   filter: blur(2px);
@@ -911,7 +904,6 @@ onMounted(() => {
   }
 }
 
-/* 移动端优化动画 */
 @media (max-width: 768px) {
   .fade-enter-active,
   .fade-leave-active,
@@ -935,7 +927,6 @@ onMounted(() => {
   }
 }
 
-/* 退出动画样式 */
 .logout-overlay {
   position: fixed;
   top: 0;
@@ -973,7 +964,6 @@ onMounted(() => {
   transform: translate(-50%, -50%) translateY(0) scale(1);
 }
 
-/* 退出时整体容器动画 */
 .app-container.logging-out {
   transform: scale(0.98);
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1014,7 +1004,6 @@ onMounted(() => {
   }
 }
 
-/* 移动端优化 */
 @media (max-width: 768px) {
   .logout-icon {
     width: 60px;
@@ -1032,7 +1021,6 @@ onMounted(() => {
   }
 }
 
-/* 减少动画设置下的兼容性 */
 @media (prefers-reduced-motion: reduce) {
   .logout-overlay,
   .logout-animation,

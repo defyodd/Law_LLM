@@ -7,7 +7,6 @@ import { useDark } from '@vueuse/core'
 // 控制注册与登录表单的显示， 默认显示注册
 const isRegister = ref(false)
 
-// 获取当前主题
 const isDark = useDark()
 
 // 定义数据模型
@@ -138,9 +137,8 @@ const login = async () => {
             tokenStore.setToken(result.data);
             await getUserInfo();
             
-            // 延迟跳转以显示成功状态
             setTimeout(() => {
-                router.push('/library'); // 改为跳转到法律文库
+                router.push('/library'); 
             }, 500);
         } else {
             ElMessage.error('用户名或密码错误！');
@@ -167,12 +165,10 @@ const clearRegisterData = () => {
 
 // 页面加载完成后执行
 onMounted(() => {
-  // 模拟页面加载时间，确保所有资源加载完成
   setTimeout(() => {
     pageLoading.value = false
   }, 800)
   
-  // 初始化粒子系统
   initParticleSystem()
 })
 
@@ -694,7 +690,6 @@ const initParticleSystem = () => {
     }
   }
 
-  /* 明亮主题下的Form组件样式调整 */
   :deep(.el-input) {
     --el-input-bg-color: rgba(255, 255, 255, 0.9);
     --el-input-text-color: #333;
@@ -731,7 +726,6 @@ const initParticleSystem = () => {
     }
   }
 
-  /* 暗色主题下的样式覆盖 */
   &.dark {
     h1 {
       color: #e0e0e0;
@@ -1188,7 +1182,7 @@ const initParticleSystem = () => {
 </style>
 
 <style lang="scss">
-/* 全局样式覆盖Element Plus的表单元素样式 */
+
 html.dark {
   .el-form-item__label {
     color: #e0e0e0 !important;
@@ -1199,13 +1193,11 @@ html.dark {
   }
 }
 
-/* 确保ElMessage组件显示在最上层，不被背景图遮挡 */
 .el-message {
   z-index: 9999 !important;
   position: fixed !important;
 }
 
-/* 确保ElMessage容器也有足够高的z-index */
 .el-message__group {
   z-index: 9999 !important;
 }

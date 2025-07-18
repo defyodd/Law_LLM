@@ -27,8 +27,6 @@ instance.interceptors.request.use(
     }
 )
 
-// import {useRouter} from 'vue-router';
-// const router = useRouter();
 
 import router from '@/router/index.js';
 

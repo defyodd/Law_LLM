@@ -6,7 +6,7 @@
         <span class="message-sender">{{ isUser ? '您' : '律智AI' }}</span>
       </div>
       <div class="message-content">
-        <!-- 复制按钮 - 移动到右上角 -->
+        <!-- 复制按钮 -->
         <div class="message-header" v-if="!isUser && message.content">
           <button class="copy-button" @click="copyContent" :title="copyButtonTitle">
             <i v-if="!copied" class="fas fa-copy"></i>
@@ -47,7 +47,7 @@
       </div>
     </div>
     
-    <!-- 参考信息来源 - 移到消息框外部 -->
+    <!-- 参考信息来源  -->
     <div v-if="!isUser && message.reference && !isWaiting" class="reference-section">
       <div class="reference-header" @click="toggleReference">
         <i class="fas fa-info-circle"></i>
@@ -105,7 +105,7 @@ const isUser = computed(() => props.message.role === 'user')
 const processContent = (content) => {
   if (!content) return ''
 
-  // ...existing code... (保留原有的think标签处理逻辑)
+  // ...existing code... 
   let thinkBlocks = [];
   let normalContent = '';
   let isInThinkBlock = false;
@@ -274,7 +274,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
-  font-size: 16px; // 从 14px 改为 16px
+  font-size: 16px; 
   font-weight: 600;
 }
 
@@ -289,11 +289,11 @@ onMounted(() => {
 
 .message-info i {
   margin-right: 6px;
-  width: 18px; // 从 16px 改为 18px
+  width: 18px; 
 }
 
 .message-sender {
-  font-size: 14px; // 从 12px 改为 14px
+  font-size: 14px; 
 }
 
 .message-content {
@@ -338,13 +338,13 @@ onMounted(() => {
   }
 }
 
-// 移除原来的 message-footer 样式
+
 .message-footer {
-  display: none; // 隐藏原来的底部按钮容器
+  display: none; 
 }
 
 .text {
-  font-size: 16px; // 从 15px 改为 16px
+  font-size: 16px;
   white-space: pre-wrap;
 }
 
@@ -358,7 +358,7 @@ onMounted(() => {
 
 .waiting-text {
   margin-top: 0.5rem;
-  font-size: 16px; // 从 0.9rem 改为 16px
+  font-size: 16px;
   color: #666;
 }
 
@@ -423,8 +423,8 @@ onMounted(() => {
 .markdown-content {
   :deep(p) {
     margin: 0.1rem 0;
-    line-height: 1.5; // 从 1.4 改为 1.5
-    font-size: 16px; // 新增，确保段落字体大小
+    line-height: 1.5; 
+    font-size: 16px; 
 
     &:first-child {
       margin-top: 0;
@@ -438,20 +438,20 @@ onMounted(() => {
   :deep(ul), :deep(ol) {
     margin: 0.1rem 0;
     padding-left: 1.5rem;
-    font-size: 16px; // 新增，确保列表字体大小
+    font-size: 16px; 
   }
 
   :deep(li) {
     margin: 0.05rem 0;
-    line-height: 1.4; // 从 1.3 改为 1.4
-    font-size: 16px; // 新增，确保列表项字体大小
+    line-height: 1.4; 
+    font-size: 16px; 
   }
 
   :deep(code) {
     background: rgba(0, 0, 0, 0.05);
     padding: 0.2em 0.4em;
     border-radius: 3px;
-    font-size: 14px; // 从 0.9em 改为 14px
+    font-size: 14px; 
     font-family: ui-monospace, monospace;
   }
 
@@ -467,8 +467,8 @@ onMounted(() => {
       background: transparent;
       padding: 0;
       font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-      font-size: 14px; // 从 0.9rem 改为 14px
-      line-height: 1.4; // 从 1.3 改为 1.4
+      font-size: 14px; 
+      line-height: 1.4; 
       tab-size: 2;
     }
   }
@@ -482,7 +482,7 @@ onMounted(() => {
     border-left: 4px solid #ddd;
     background-color: rgba(0, 0, 0, 0.03);
     border-radius: 0 0.5rem 0.5rem 0;
-    font-size: 16px; // 新增，确保思考块字体大小
+    font-size: 16px; 
 
     &::before {
       content: '思考';
@@ -490,7 +490,7 @@ onMounted(() => {
       top: -0.75rem;
       left: 1rem;
       padding: 0 0.5rem;
-      font-size: 12px; // 从 0.75rem 改为 12px
+      font-size: 12px; 
       background: #f5f5f5;
       border-radius: 0.25rem;
       color: #999;
@@ -498,12 +498,12 @@ onMounted(() => {
     }
   }
 
-  // 添加更紧凑的文本样式
+
   :deep(br) {
-    line-height: 1.2; // 从 1.1 改为 1.2
+    line-height: 1.2; 
   }
 
-  // 确保连续的段落更紧凑
+
   :deep(p + p) {
     margin-top: 0.05rem;
   }
@@ -511,8 +511,8 @@ onMounted(() => {
   // 针对单行文本的特殊处理
   :deep(p:only-child) {
     margin: 0;
-    line-height: 1.4; // 从 1.3 改为 1.4
-    font-size: 16px; // 新增，确保单段落字体大小
+    line-height: 1.4; 
+    font-size: 16px;
   }
 
   // 处理数字列表的间距
@@ -522,10 +522,10 @@ onMounted(() => {
 
   // 处理文本节点的间距
   :deep() {
-    line-height: 1.5; // 从 1.4 改为 1.5
+    line-height: 1.5; 
   }
 
-  // 移除所有默认的浏览器间距
+  
   :deep(*) {
     margin-block-start: 0;
     margin-block-end: 0;
@@ -543,7 +543,7 @@ onMounted(() => {
   }
 }
 
-/* 参考信息样式 - 调整为独立区域 */
+/* 参考信息样式 */
 .reference-section {
   max-width: 80%;
   align-self: flex-start;
@@ -631,7 +631,7 @@ onMounted(() => {
   // ...existing code...
 }
 
-/* 暗黑模式适配 */
+
 @media (prefers-color-scheme: dark) {
   // ...existing code...
   
