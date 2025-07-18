@@ -243,7 +243,6 @@ class LawAgent:
                 })
                 return response
 
-            # ====== 下面是你原有的“法律问题”RAG流程 ======
             query_type = self._analyze_query_type(question)
             keywords = self._extract_keywords(question)
             results = self.searcher.search(question, top_k=max_results)
