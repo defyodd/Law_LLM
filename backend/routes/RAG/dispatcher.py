@@ -58,12 +58,12 @@ class AgentDispatcher:
                 question_type = self.determine_question_type(question)
                 print(f"通过问题分析判断类型: {question_type}")
             # 优先检查FAQ
-            # if self.faq_agent and any(k in question for k in self.faq_agent.FAQS):
-            #     result = self.faq_agent.answer(question)
-            #     result["history_id"] = history_id
-            #     result["model_used"] = model
-            #     result["type"] = "chat"  # FAQ 默认为 chat 类型
-            #     return result
+            if self.faq_agent and any(k in question for k in self.faq_agent.FAQS):
+                result = self.faq_agent.answer(question)
+                result["history_id"] = history_id
+                result["model_used"] = model
+                result["type"] = "chat"  # FAQ 默认为 chat 类型
+                return result
 
             # 根据类型调用相应的agent
             if question_type == "write":
