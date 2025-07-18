@@ -35,7 +35,6 @@ class ContractAgent:
             print(f"调用 DeepSeek API 失败: {e}")
             return "抱歉，AI 服务暂时不可用，请稍后重试。"
 
-    # 其他方法保持不变...
     def answer(self, question: str, history: List[Dict] = None, context_chats: list = None) -> dict:
         # 更新对话历史
         if history:
